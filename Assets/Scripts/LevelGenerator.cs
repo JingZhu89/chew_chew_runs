@@ -43,7 +43,7 @@ public class LevelGenerator : MonoBehaviour
 
         for (int i=0; i<startingLevelParts;i++)
         {
-            SpawnGroundPart();
+            SpawnBeginningGroundPart();
         }
   
     }
@@ -86,9 +86,9 @@ public class LevelGenerator : MonoBehaviour
             numberOfGroundSpawned++;
              if (obstacleJustSpawned == false && Random.Range(0.0f, 1.0f) < obstacleSpawnPercentage && manholeJustSpawned == false)
             {
-                obstacle_1= SpawnObstacle(lastGroundPartTransform.Find("up").position);
-                var obstacleDownPosition=obstacle_1.Find("down").localPosition;
-                obstacle_1.position -= Vector3.Scale(obstacleDownPosition ,obstacle_1.localScale);
+                Transform obstacleTransform= SpawnObstacle(lastGroundPartTransform.Find("up").position);
+                var obstacleDownPosition= obstacleTransform.Find("down").localPosition;
+                obstacleTransform.position -= Vector3.Scale(obstacleDownPosition , obstacleTransform.localScale);
                                
                 obstacleJustSpawned = true;
             }
@@ -110,6 +110,20 @@ public class LevelGenerator : MonoBehaviour
         
         groundEndPosition = lastGroundPartTransform.Find("right").position + (lastGroundPartTransform.Find("right").position - lastGroundPartTransform.Find("left").position) / 2;
     }
+
+
+
+    // define spawning method for begining of game ground parts//
+
+    private void SpawnBeginningGroundPart()
+    {
+         
+        Transform lastGroundPartTransform = SpawnGround(groundEndPosition);
+
+        groundEndPosition = lastGroundPartTransform.Find("right").position + (lastGroundPartTransform.Find("right").position - lastGroundPartTransform.Find("left").position) / 2;
+    }
+
+
 
 
     // define spawning method for floating parts//
