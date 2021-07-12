@@ -11,10 +11,11 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private Transform groundManhole_1;
     [SerializeField] private Transform obstacle_1;
     [SerializeField] private PlayerMovement player;
-    [SerializeField] private Transform floatingPlatform_short;
-    [SerializeField] private Transform floatingPlatform_long;
+    [SerializeField] private Transform floatingPlatform_middle;
+    [SerializeField] private Transform floatingPlatform_left;
+    [SerializeField] private Transform floatingPlatform_right;
+    [SerializeField] private Transform floatingPlatform_single;
     [SerializeField] private Transform collectable_coin;
-
 
     public int startingLevelParts;
     public float manholePercentage = 0.15f;
@@ -27,9 +28,9 @@ public class LevelGenerator : MonoBehaviour
     private bool obstacleJustSpawned = false;
     public float distanceToGround_1 = -1.0f;
     public float distanceToGround_2 = 2.8f;
-    public float shortPlatformPercentage = 0.5f;
-    public float minDistanceBetweenPlatforms = 2.0f;
-    public float maxDistanceBetweenPlatforms = 10.0f;
+    public int maxContinuousPlatform = 5;
+    public float minDistanceBetweenPlatformSets = 5.0f;
+    public float maxDistanceBetweenPlatformSets = 10.0f;
 
 
 
@@ -38,9 +39,9 @@ public class LevelGenerator : MonoBehaviour
     private void Awake()
     {
         groundEndPosition = groundPart_Start.Find("right").position + (groundPart_Start.Find("right").position - groundPart_Start.Find("left").position) / 2;
-        floatingEndPosition = new Vector3(Random.Range(minDistanceBetweenPlatforms, maxDistanceBetweenPlatforms), Random.Range(distanceToGround_1, distanceToGround_2), 0);
+        floatingEndPosition = new Vector3(Random.Range(minDistanceBetweenPlatformSets, maxDistanceBetweenPlatformSets), Random.Range(distanceToGround_1, distanceToGround_2), 0);
 
-        for (int i=0; i>startingLevelParts;i++)
+        for (int i=0; i<startingLevelParts;i++)
         {
             SpawnGroundPart();
         }
@@ -95,9 +96,9 @@ public class LevelGenerator : MonoBehaviour
             { obstacleJustSpawned = false;
             if(Random.Range(0.0f, 1.0f) < collectableSpawnPercentage)
                 {
-                    collectable_coin = SpawnCollectable(lastGroundPartTransform.Find("up").position);
-                    var coinDownPosition = collectable_coin.Find("down").localPosition;
-                    collectable_coin.position -= Vector3.Scale(coinDownPosition, collectable_coin.localScale);
+                    Transform CoinTrasnform = SpawnCollectable(lastGroundPartTransform.Find("up").position);
+                    var coinDownPosition = CoinTrasnform.Find("down").localPosition;
+                    CoinTrasnform.position -= Vector3.Scale(coinDownPosition, CoinTrasnform.localScale);
 
                 }
 
@@ -111,30 +112,92 @@ public class LevelGenerator : MonoBehaviour
     }
 
 
-// define spawning method for floating parts//
+    // define spawning method for floating parts//
     private void SpawnFloatingPart()
     {
         Transform lastFloatingPartTransform;
-        lastFloatingPartTransform = SpawnFloatingPlatform(floatingEndPosition);
-        floatingEndPosition = new Vector3(lastFloatingPartTransform.Find("right").position.x + (lastFloatingPartTransform.Find("right").position.x - lastFloatingPartTransform.Find("left").position.x) / 2 + Random.Range(minDistanceBetweenPlatforms,maxDistanceBetweenPlatforms),Random.Range(distanceToGround_1, distanceToGround_2),0) ;
+        int numberOfContinuousPlatforms = Random.Range(1, maxContinuousPlatform);
+        int numberOfMiddlePlatforms = Mathf.Max(numberOfContinuousPlatforms - 2, 0);
+        float xdistanceBetweenPlatformSets = Random.Range(minDistanceBetweenPlatformSets, maxDistanceBetweenPlatformSets);
+        float ydistanceToGround = Random.Range(distanceToGround_1, distanceToGround_2);
+        if (numberOfContinuousPlatforms == 1)
+        {
+            lastFloatingPartTransform = SpawnFloatingPlatformSingle(floatingEndPosition);
+            SpawnObjectsOnPlatform(lastFloatingPartTransform);
+            floatingEndPosition = new Vector3(GetFloatingEndXPosition(lastFloatingPartTransform) + xdistanceBetweenPlatformSets, ydistanceToGround, 0);
+            
+        }
+        if (numberOfContinuousPlatforms >= 3)
+        {
+            lastFloatingPartTransform = SpawnFloatingPlatformLeft(floatingEndPosition);
+            SpawnObjectsOnPlatform(lastFloatingPartTransform);
+            floatingEndPosition = GetFloatingMiddlePosition(lastFloatingPartTransform);
+            for (int i = 0; i < numberOfMiddlePlatforms; i++)
+            {
+                lastFloatingPartTransform = SpawnFloatingPlatformMiddle(floatingEndPosition);
+                SpawnObjectsOnPlatform(lastFloatingPartTransform);
+                floatingEndPosition = GetFloatingMiddlePosition(lastFloatingPartTransform);
+            }
+            lastFloatingPartTransform = SpawnFloatingPlatformRight(floatingEndPosition);
+            SpawnObjectsOnPlatform(lastFloatingPartTransform);
+            floatingEndPosition = new Vector3(GetFloatingEndXPosition(lastFloatingPartTransform) + xdistanceBetweenPlatformSets, ydistanceToGround, 0);
 
+        }
+        else
+        {
+            lastFloatingPartTransform = SpawnFloatingPlatformLeft(floatingEndPosition);
+            SpawnObjectsOnPlatform(lastFloatingPartTransform);
+            floatingEndPosition = GetFloatingMiddlePosition(lastFloatingPartTransform);
+            lastFloatingPartTransform = SpawnFloatingPlatformRight(floatingEndPosition);
+            SpawnObjectsOnPlatform(lastFloatingPartTransform);
+            floatingEndPosition = new Vector3(GetFloatingEndXPosition(lastFloatingPartTransform) + xdistanceBetweenPlatformSets, ydistanceToGround, 0);
+
+        }
 
     }
 
-       
+    private float GetFloatingEndXPosition(Transform lastFoatingPartTransform)
+    {
+        return lastFoatingPartTransform.Find("right").position.x + (lastFoatingPartTransform.Find("right").position.x - lastFoatingPartTransform.Find("left").position.x) / 2;
+    }
 
+    private Vector3 GetFloatingMiddlePosition(Transform lastFloatingPartTransform)
+    {
+        return lastFloatingPartTransform.Find("right").position + (lastFloatingPartTransform.Find("right").position - lastFloatingPartTransform.Find("left").position) / 2;
+    }
+
+
+    private void SpawnObjectsOnPlatform(Transform lastFloatingPartTransform)
+    {
+        if (Random.Range(0.0f, 1.0f) < obstacleSpawnPercentage)
+        {
+            obstacle_1 = SpawnObstacle(lastFloatingPartTransform.Find("up").position);
+            var obstacleDownPosition = obstacle_1.Find("down").localPosition;
+            obstacle_1.position -= Vector3.Scale(obstacleDownPosition, obstacle_1.localScale);
+        }
+
+        else if (Random.Range(0.0f, 1.0f) < collectableSpawnPercentage)
+            {
+                Transform CoinTrasnform = SpawnCollectable(lastFloatingPartTransform.Find("up").position);
+                var coinDownPosition = CoinTrasnform.Find("down").localPosition;
+                CoinTrasnform.position -= Vector3.Scale(coinDownPosition, CoinTrasnform.localScale);
+
+            }
+
+        
+    }
 
 
     private Transform SpawnGround(Vector3 spawnPosition)
     {
-            Transform GroundPartTransform = Instantiate(groundPart_1, spawnPosition, Quaternion.identity);
-            return GroundPartTransform;
+            Transform groundPartTransform = Instantiate(groundPart_1, spawnPosition, Quaternion.identity);
+            return groundPartTransform;
     }
 
     private Transform SpawnManhole(Vector3 spawnPosition)
     {
-        Transform GroundPartTransform = Instantiate(groundManhole_1, spawnPosition, Quaternion.identity);
-        return GroundPartTransform;
+        Transform groundPartTransform = Instantiate(groundManhole_1, spawnPosition, Quaternion.identity);
+        return groundPartTransform;
     }
 
     private Transform SpawnObstacle(Vector3 spawnPosition)
@@ -144,15 +207,29 @@ public class LevelGenerator : MonoBehaviour
     }
 
        
-    private Transform SpawnFloatingPlatform(Vector3 spawnPosition)
+    private Transform SpawnFloatingPlatformMiddle(Vector3 spawnPosition)
     {
-        Transform floatingPlatformTransform;
-        if (Random.Range(0.0f, 1.0f) <= shortPlatformPercentage)
-        {  floatingPlatformTransform = Instantiate(floatingPlatform_short, spawnPosition, Quaternion.identity); }
-        else
-        {  floatingPlatformTransform = Instantiate(floatingPlatform_long, spawnPosition, Quaternion.identity); }
-        return floatingPlatformTransform; 
-        
+        Transform floatingPlatformTransform = Instantiate(floatingPlatform_middle, spawnPosition, Quaternion.identity); 
+         return floatingPlatformTransform;
+    }
+
+    private Transform SpawnFloatingPlatformLeft(Vector3 spawnPosition)
+    {
+        Transform floatingPlatformTransform = Instantiate(floatingPlatform_left, spawnPosition, Quaternion.identity);
+        return floatingPlatformTransform;
+    }
+
+    private Transform SpawnFloatingPlatformRight(Vector3 spawnPosition)
+    {
+        Transform floatingPlatformTransform = Instantiate(floatingPlatform_right, spawnPosition, Quaternion.identity);
+        return floatingPlatformTransform;
+    }
+
+
+    private Transform SpawnFloatingPlatformSingle(Vector3 spawnPosition)
+    {
+        Transform floatingPlatformTransform = Instantiate(floatingPlatform_single, spawnPosition, Quaternion.identity);
+        return floatingPlatformTransform;
     }
 
 

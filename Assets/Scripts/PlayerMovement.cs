@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public float runSpeed = 10.0f;
+    public float runSpeed = 6.0f;
     public float jumpVelocity = 1.0f;
     float horizontalMove = 0f;
     bool jump = false;
@@ -25,8 +25,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+
         animator.SetBool("IsJumping", jump);
         if (Input.GetButtonDown("Jump"))
         {
@@ -46,6 +45,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        horizontalMove = runSpeed;
+        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
         Vector2 velocity = rb.velocity;
         velocity.x = horizontalMove;
         if (jump == true && isGrounded==true) { velocity.y = jumpVelocity; }
