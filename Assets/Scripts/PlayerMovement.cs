@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class PlayerMovement : MonoBehaviour
@@ -47,11 +48,7 @@ public class PlayerMovement : MonoBehaviour
         if (transform.position.y <= bottomOfScreen)
         {
             healthScore = 0;
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+            SceneManager.LoadScene("MainMenu");
         }
 
     }
@@ -61,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetFloat("Speed", runSpeed);
         Vector2 velocity = rb.velocity;
-        velocity.x = runSpeed*(1+Time.time*speedIncreaseFactor);
+        velocity.x = runSpeed*(1+Time.timeSinceLevelLoad*speedIncreaseFactor);
         if (jump == true && isGrounded==true)
         {
             velocity.y = jumpVelocity;
@@ -113,11 +110,7 @@ public class PlayerMovement : MonoBehaviour
             else
             {
                 healthScore--;
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+                SceneManager.LoadScene("MainMenu");
 
             }
         }

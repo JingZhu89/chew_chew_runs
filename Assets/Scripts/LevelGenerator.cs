@@ -7,14 +7,14 @@ public class LevelGenerator : MonoBehaviour
 
     private const float PLAYER_DISTANCE_SPAWN_PART = 20f;
     [SerializeField] private Transform groundPart_Start;
-    [SerializeField] private Transform groundPart_1;
+    //[SerializeField] private Transform groundPart_1;
     [SerializeField] private Transform groundManhole_1;
-    [SerializeField] private Transform obstacle_1;
+    [SerializeField] private Transform obstacleMace;
     [SerializeField] private PlayerMovement player;
-    [SerializeField] private Transform floatingPlatform_middle;
-    [SerializeField] private Transform floatingPlatform_left;
-    [SerializeField] private Transform floatingPlatform_right;
-    [SerializeField] private Transform floatingPlatform_single;
+    //[SerializeField] private Transform floatingPlatform_middle;
+    //[SerializeField] private Transform floatingPlatform_left;
+    //[SerializeField] private Transform floatingPlatform_right;
+    //[SerializeField] private Transform floatingPlatform_single;
     [SerializeField] private Transform collectable_coin;
 
     public int startingLevelParts;
@@ -36,7 +36,7 @@ public class LevelGenerator : MonoBehaviour
 
 
     // spawn initial parts//
-    private void Awake()
+    private void Start()
     {
         groundEndPosition = groundPart_Start.Find("right").position + (groundPart_Start.Find("right").position - groundPart_Start.Find("left").position) / 2;
         floatingEndPosition = new Vector3(Random.Range(minDistanceBetweenPlatformSets, maxDistanceBetweenPlatformSets), Random.Range(distanceToGround_1, distanceToGround_2), 0);
@@ -86,9 +86,9 @@ public class LevelGenerator : MonoBehaviour
             numberOfGroundSpawned++;
              if (obstacleJustSpawned == false && Random.Range(0.0f, 1.0f) < obstacleSpawnPercentage && manholeJustSpawned == false)
             {
-                Transform obstacleTransform= SpawnObstacle(lastGroundPartTransform.Find("up").position);
-                var obstacleDownPosition= obstacleTransform.Find("down").localPosition;
-                obstacleTransform.position -= Vector3.Scale(obstacleDownPosition , obstacleTransform.localScale);
+                Transform MaceTransform= SpawnObstacle(lastGroundPartTransform.Find("up").position);
+                var MaceDownPosition = MaceTransform.Find("down").localPosition;
+                MaceTransform.position -= Vector3.Scale(MaceDownPosition, MaceTransform.localScale);
                                
                 obstacleJustSpawned = true;
             }
@@ -185,27 +185,34 @@ public class LevelGenerator : MonoBehaviour
     {
         if (Random.Range(0.0f, 1.0f) < obstacleSpawnPercentage)
         {
-            obstacle_1 = SpawnObstacle(lastFloatingPartTransform.Find("up").position);
-            var obstacleDownPosition = obstacle_1.Find("down").localPosition;
-            obstacle_1.position -= Vector3.Scale(obstacleDownPosition, obstacle_1.localScale);
+            Transform maceTransform = SpawnObstacle(lastFloatingPartTransform.Find("up").position);
+            var obstacleDownPosition = maceTransform.Find("down").localPosition;
+            maceTransform.position -= Vector3.Scale(obstacleDownPosition, maceTransform.localScale);
         }
 
         else if (Random.Range(0.0f, 1.0f) < collectableSpawnPercentage)
             {
-                Transform CoinTrasnform = SpawnCollectable(lastFloatingPartTransform.Find("up").position);
-                var coinDownPosition = CoinTrasnform.Find("down").localPosition;
-                CoinTrasnform.position -= Vector3.Scale(coinDownPosition, CoinTrasnform.localScale);
-
+                Transform coinTrasnform = SpawnCollectable(lastFloatingPartTransform.Find("up").position);
+                var coinDownPosition = coinTrasnform.Find("down").localPosition;
+                coinTrasnform.position -= Vector3.Scale(coinDownPosition, coinTrasnform.localScale);
             }
 
-        
     }
+
+
+
 
 
     private Transform SpawnGround(Vector3 spawnPosition)
     {
-            Transform groundPartTransform = Instantiate(groundPart_1, spawnPosition, Quaternion.identity);
-            return groundPartTransform;
+        GameObject groundPart = TileObjectPool.SharedInstance.GetPooledGroundTiles();
+        if(groundPart != null)
+        {
+            groundPart.transform.position = spawnPosition;
+            groundPart.SetActive(true);
+            return groundPart.transform;
+        }
+        return null;
     }
 
     private Transform SpawnManhole(Vector3 spawnPosition)
@@ -216,34 +223,58 @@ public class LevelGenerator : MonoBehaviour
 
     private Transform SpawnObstacle(Vector3 spawnPosition)
     {
-        Transform obstacleTransform = Instantiate(obstacle_1, spawnPosition, Quaternion.identity);
+        Transform obstacleTransform = Instantiate(obstacleMace, spawnPosition, Quaternion.identity);
         return obstacleTransform;
     }
 
        
     private Transform SpawnFloatingPlatformMiddle(Vector3 spawnPosition)
     {
-        Transform floatingPlatformTransform = Instantiate(floatingPlatform_middle, spawnPosition, Quaternion.identity); 
-         return floatingPlatformTransform;
+        GameObject platformMiddlePart = TileObjectPool.SharedInstance.GetPooledPlatformMiddleTiles();
+        if (platformMiddlePart != null)
+        {
+            platformMiddlePart.transform.position = spawnPosition;
+            platformMiddlePart.SetActive(true);
+            return platformMiddlePart.transform;
+        }
+        return null;
     }
 
     private Transform SpawnFloatingPlatformLeft(Vector3 spawnPosition)
     {
-        Transform floatingPlatformTransform = Instantiate(floatingPlatform_left, spawnPosition, Quaternion.identity);
-        return floatingPlatformTransform;
+        GameObject platformLeftPart = TileObjectPool.SharedInstance.GetPooledPlatformLeftTiles();
+        if (platformLeftPart != null)
+        {
+            platformLeftPart.transform.position = spawnPosition;
+            platformLeftPart.SetActive(true);
+            return platformLeftPart.transform;
+        }
+        return null;
     }
 
     private Transform SpawnFloatingPlatformRight(Vector3 spawnPosition)
     {
-        Transform floatingPlatformTransform = Instantiate(floatingPlatform_right, spawnPosition, Quaternion.identity);
-        return floatingPlatformTransform;
+        GameObject platformRightPart = TileObjectPool.SharedInstance.GetPooledPlatformRightTiles();
+        if (platformRightPart != null)
+        {
+            platformRightPart.transform.position = spawnPosition;
+            platformRightPart.SetActive(true);
+            return platformRightPart.transform;
+        }
+        return null;
     }
 
 
     private Transform SpawnFloatingPlatformSingle(Vector3 spawnPosition)
     {
-        Transform floatingPlatformTransform = Instantiate(floatingPlatform_single, spawnPosition, Quaternion.identity);
-        return floatingPlatformTransform;
+        GameObject platformSinglePart = TileObjectPool.SharedInstance.GetPooledPlatformSingleTiles();
+        if (platformSinglePart != null)
+        {
+            platformSinglePart.transform.position = spawnPosition;
+            platformSinglePart.SetActive(true);
+            return platformSinglePart.transform;
+        }
+        return null;
     }
 
 
