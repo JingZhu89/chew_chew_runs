@@ -19,15 +19,22 @@ public class PlayerMovement : MonoBehaviour
     public int playerScore { get; private set; }
     public int healthScore { get; private set; }
     private bool jumping = false;
-    private float jumpTimeCounter;
+    private float jumpTimeCounter; //max time you can jump//
     public float jumpTime;
+    private bool crashThroughEverything = false;
+    public int crashThroughDuration = 10;
+    public int flyingModeDuration = 20;
+    public int powerUpRemainingTime { get; private set; }
+    private int powerUpStartTime;
+    private bool flyingMode = false;
+
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         bottomOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)).y;
-        healthScore = 3;
+        healthScore = 100;
     }
     // Update is called once per frame
     void Update()
@@ -59,34 +66,94 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Speed", runSpeed);
         Vector2 velocity = rb.velocity;
         velocity.x = runSpeed*(1+Time.timeSinceLevelLoad*speedIncreaseFactor);
-        if (jump == true && isGrounded==true)
-        {
-            velocity.y = jumpVelocity;
-            jumpTimeCounter = jumpTime;
-            jumping = true;
-        }
-        jump = false;
-        if (jumping == true && jumpTimeCounter>0)
-        {
+
+            if (jump == true && isGrounded == true && flyingMode==false)
+            {
+                velocity.y = jumpVelocity;
+                jumpTimeCounter = jumpTime;
+                jumping = true;
+            }
+
+
+            if (jump == true && flyingMode == true)
+            {
+                velocity.y = jumpVelocity;
+                jumping = false;
+            }
+        
+            else if (jumping == true && jumpTimeCounter > 0 && flyingMode==false)
+            {
                 velocity.y = jumpVelocity;
                 jumpTimeCounter -= Time.deltaTime;
-         }
-            else { jumping = false; }
-        
+            }
+
+            else
+            {
+                jumping = false;
+            }
+            jump = false;
+
 
         rb.velocity = velocity;
+
+
+        //calculate time for power ups//
+        if (crashThroughEverything == true)
+        {
+           powerUpRemainingTime = Mathf.Max(crashThroughDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad)- powerUpStartTime),0);
+           if(powerUpRemainingTime == 0)
+           {
+                crashThroughEverything = false;
+           }
+
+
+        }
+
+        if (flyingMode == true)
+        {
+            powerUpRemainingTime = Mathf.Max(flyingModeDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - powerUpStartTime), 0);
+            if (powerUpRemainingTime == 0)
+            {
+                flyingMode = false; print("flying mode set to false");
+            }
+
+
+        }
+
+
+
     }
 
 
-
+   
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.CompareTag("Collectable"))
-        { Destroy(col.gameObject);
+        {
+            Destroy(col.gameObject);
             PlayerScores();
         }
 
+        if (col.gameObject.CompareTag("CrashThrough"))
+        {
+            Destroy(col.gameObject);
+            DisableAllPowerUps();
+            crashThroughEverything = true;
+            powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
+        }
+
+
+        if (col.gameObject.CompareTag("FlyingMode"))
+        {
+            Destroy(col.gameObject);
+            DisableAllPowerUps();
+            flyingMode = true; print("flying mode set to true");
+            powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
+        }
+
     }
+
+
 
     public int PlayerScores()
     {
@@ -100,13 +167,15 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D col)
     {
 
-        if (col.collider.gameObject.CompareTag("Obstacle"))
+        if (col.collider.gameObject.CompareTag("Obstacle") && crashThroughEverything == false)
 
         {
             if (healthScore > 1)
-
-
-            { healthScore--; Destroy(col.gameObject); }
+                
+            {
+                healthScore--;
+                Destroy(col.gameObject);
+            }
             else
             {
                 healthScore--;
@@ -114,16 +183,18 @@ public class PlayerMovement : MonoBehaviour
 
             }
         }
+        else if (col.collider.gameObject.CompareTag("Obstacle") && crashThroughEverything == true)
+        {
+            Destroy(col.gameObject);
+        }
     }
 
     private void OnCollisionStay2D(Collision2D col)
     {
-        print("Got collision with " + col.collider.name);
-        print("Collider has tag " + col.collider.gameObject.tag);
+
         if (col.collider.gameObject.CompareTag("Platform") && col.relativeVelocity.y==0)
         {
             isGrounded = true;
-            print("set is grounded true");
         }
 
     }
@@ -132,9 +203,17 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionExit2D(Collision2D col)
     {
         if (col.collider.gameObject.CompareTag("Platform"))
-        { isGrounded = false;
-            print("set is grounded false");
+        {
+            isGrounded = false;
         }
+
+    }
+
+    private void DisableAllPowerUps()
+    {
+
+        crashThroughEverything = false;
+        flyingMode = false;
 
     }
 

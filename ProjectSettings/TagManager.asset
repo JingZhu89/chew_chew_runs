@@ -7,6 +7,9 @@ TagManager:
   - Obstacle
   - Platform
   - Collectable
+  - CrashThrough
+  - FlyingMode
+  - Undefined
   layers:
   - Default
   - TransparentFX

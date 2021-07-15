@@ -7,15 +7,11 @@ public class LevelGenerator : MonoBehaviour
 
     private const float PLAYER_DISTANCE_SPAWN_PART = 20f;
     [SerializeField] private Transform groundPart_Start;
-    //[SerializeField] private Transform groundPart_1;
     [SerializeField] private Transform groundManhole_1;
     [SerializeField] private Transform obstacleMace;
     [SerializeField] private PlayerMovement player;
-    //[SerializeField] private Transform floatingPlatform_middle;
-    //[SerializeField] private Transform floatingPlatform_left;
-    //[SerializeField] private Transform floatingPlatform_right;
-    //[SerializeField] private Transform floatingPlatform_single;
-    [SerializeField] private Transform collectable_coin;
+    [SerializeField] private Transform collectable_Coin;
+
 
     public int startingLevelParts;
     public float manholePercentage = 0.15f;
@@ -25,12 +21,14 @@ public class LevelGenerator : MonoBehaviour
     private bool manholeJustSpawned = false;
     public float obstacleSpawnPercentage = 0.10f;
     public float collectableSpawnPercentage = 0.15f;
+    public float powerUpSpawnPercentage = 0.08f;
     private bool obstacleJustSpawned = false;
     public float distanceToGround_1 = -1.0f;
     public float distanceToGround_2 = 2.8f;
     public int maxContinuousPlatform = 5;
     public float minDistanceBetweenPlatformSets = 5.0f;
     public float maxDistanceBetweenPlatformSets = 10.0f;
+ 
 
 
 
@@ -69,8 +67,10 @@ public class LevelGenerator : MonoBehaviour
     private void SpawnGroundPart()
     {
         Transform lastGroundPartTransform;
-  
-        
+        float obstaclesSpawnRNG = Random.Range(0.0f, 1.0f);
+        float collectableSpawnRNG = Random.Range(0.0f, 1.0f);
+        float powerUpSpawnRNG = Random.Range(0.0f, 1.0f);
+
         int numberOfGroundSpawned = 0;
 
         
@@ -84,7 +84,8 @@ public class LevelGenerator : MonoBehaviour
         {
             lastGroundPartTransform = SpawnGround(groundEndPosition);
             numberOfGroundSpawned++;
-             if (obstacleJustSpawned == false && Random.Range(0.0f, 1.0f) < obstacleSpawnPercentage && manholeJustSpawned == false)
+
+            if (obstacleJustSpawned == false && obstaclesSpawnRNG < obstacleSpawnPercentage && manholeJustSpawned == false)
             {
                 Transform MaceTransform= SpawnObstacle(lastGroundPartTransform.Find("up").position);
                 var MaceDownPosition = MaceTransform.Find("down").localPosition;
@@ -92,15 +93,26 @@ public class LevelGenerator : MonoBehaviour
                                
                 obstacleJustSpawned = true;
             }
+
             else
             { obstacleJustSpawned = false;
-            if(Random.Range(0.0f, 1.0f) < collectableSpawnPercentage)
+
+                if (collectableSpawnRNG < collectableSpawnPercentage)
                 {
-                    Transform CoinTrasnform = SpawnCollectable(lastGroundPartTransform.Find("up").position);
-                    var coinDownPosition = CoinTrasnform.Find("down").localPosition;
-                    CoinTrasnform.position -= Vector3.Scale(coinDownPosition, CoinTrasnform.localScale);
+                    Transform coinTrasnform = SpawnCollectable(lastGroundPartTransform.Find("up").position);
+                    var coinDownPosition = coinTrasnform.Find("down").localPosition;
+                    coinTrasnform.position -= Vector3.Scale(coinDownPosition, coinTrasnform.localScale);
+                }
+
+                else if (powerUpSpawnRNG < powerUpSpawnPercentage)
+                {
+                    Transform chestTrasnform = SpawnPowerUps(lastGroundPartTransform.Find("up").position);
+                    var chestDownPosition = chestTrasnform.Find("down").localPosition;
+                    chestTrasnform.position -= Vector3.Scale(chestDownPosition, chestTrasnform.localScale);
 
                 }
+     
+
 
             }
 
@@ -183,24 +195,35 @@ public class LevelGenerator : MonoBehaviour
 
     private void SpawnObjectsOnPlatform(Transform lastFloatingPartTransform)
     {
-        if (Random.Range(0.0f, 1.0f) < obstacleSpawnPercentage)
+
+        float obstaclesSpawnRNG = Random.Range(0.0f, 1.0f);
+        float collectableSpawnRNG = Random.Range(0.0f, 1.0f);
+        float powerUpSpawnRNG = Random.Range(0.0f, 1.0f);
+
+        if (obstaclesSpawnRNG < obstacleSpawnPercentage)
         {
             Transform maceTransform = SpawnObstacle(lastFloatingPartTransform.Find("up").position);
             var obstacleDownPosition = maceTransform.Find("down").localPosition;
             maceTransform.position -= Vector3.Scale(obstacleDownPosition, maceTransform.localScale);
         }
 
-        else if (Random.Range(0.0f, 1.0f) < collectableSpawnPercentage)
-            {
-                Transform coinTrasnform = SpawnCollectable(lastFloatingPartTransform.Find("up").position);
-                var coinDownPosition = coinTrasnform.Find("down").localPosition;
-                coinTrasnform.position -= Vector3.Scale(coinDownPosition, coinTrasnform.localScale);
-            }
+        else if (collectableSpawnRNG < collectableSpawnPercentage)
+        {
+            Transform coinTrasnform = SpawnCollectable(lastFloatingPartTransform.Find("up").position);
+            var coinDownPosition = coinTrasnform.Find("down").localPosition;
+            coinTrasnform.position -= Vector3.Scale(coinDownPosition, coinTrasnform.localScale);
+        }
+        else if (powerUpSpawnRNG < powerUpSpawnPercentage)
+        {
+            Transform powerUpTransform = SpawnPowerUps(lastFloatingPartTransform.Find("up").position);
+            var powerUpDownPosition = powerUpTransform.Find("down").localPosition;
+            powerUpTransform.position -= Vector3.Scale(powerUpDownPosition, powerUpTransform.localScale);
+        }
 
     }
 
 
-
+    //grab the object to spawn//
 
 
     private Transform SpawnGround(Vector3 spawnPosition)
@@ -280,10 +303,21 @@ public class LevelGenerator : MonoBehaviour
 
     private Transform SpawnCollectable(Vector3 spawnPosition)
     {
-        Transform collectableTransform;
-        collectableTransform = Instantiate(collectable_coin, spawnPosition, Quaternion.identity);
-        return collectableTransform;
+        Transform CollectableTransform;
+        CollectableTransform = Instantiate(collectable_Coin, spawnPosition, Quaternion.identity);
+        return CollectableTransform;
     }
+
+
+    private Transform SpawnPowerUps(Vector3 spawnPosition)
+    {
+        Transform  PowerUpTransform;
+        PowerUpTransform = Instantiate(GetPowerUp.SharedInstance.getPowerUp(), spawnPosition, Quaternion.identity).transform;
+        return PowerUpTransform;
+    }
+
+
+
 
 }
 

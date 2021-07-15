@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 28106528}
   - component: {fileID: 28106530}
   - component: {fileID: 28106529}
-  - component: {fileID: 28106532}
   m_Layer: 5
   m_Name: Scores
   m_TagString: Untagged
@@ -203,21 +202,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 28106527}
   m_CullTransparentMesh: 1
---- !u!114 &28106532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 28106527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58402e6e211772946a00c53754e3c420, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Player: {fileID: 564574327}
-  scoreText: {fileID: 28106529}
-  healthText: {fileID: 527627461}
 --- !u!1001 &126612081
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -352,7 +336,6 @@ GameObject:
   - component: {fileID: 527627464}
   - component: {fileID: 527627463}
   - component: {fileID: 527627461}
-  - component: {fileID: 527627462}
   m_Layer: 5
   m_Name: Health
   m_TagString: Untagged
@@ -394,21 +377,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Health
---- !u!114 &527627462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 527627460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58402e6e211772946a00c53754e3c420, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Player: {fileID: 564574327}
-  scoreText: {fileID: 28106529}
-  healthText: {fileID: 527627461}
 --- !u!222 &527627463
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -540,7 +508,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &564574325
 BoxCollider2D:
@@ -605,6 +573,7 @@ MonoBehaviour:
   jumpVelocity: 10
   speedIncreaseFactor: 0.1
   jumpTime: 0.5
+  crashThroughDuration: 10
 --- !u!1001 &800121014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -977,6 +946,85 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 281687915349924502, guid: 2b84978623c61d148abb0c4ac4122448, type: 3}
   m_PrefabInstance: {fileID: 1281608299}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1436271285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1436271286}
+  - component: {fileID: 1436271289}
+  - component: {fileID: 1436271288}
+  m_Layer: 5
+  m_Name: PowerUp
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1436271286
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436271285}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1564843165}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -842.9, y: -31}
+  m_SizeDelta: {x: 500, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1436271288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436271285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 20
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 50
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Powerup Remaning Time
+--- !u!222 &1436271289
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436271285}
+  m_CullTransparentMesh: 1
 --- !u!1 &1564843161
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,6 +1037,7 @@ GameObject:
   - component: {fileID: 1564843164}
   - component: {fileID: 1564843163}
   - component: {fileID: 1564843162}
+  - component: {fileID: 1564843166}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1070,6 +1119,7 @@ RectTransform:
   m_Children:
   - {fileID: 527627464}
   - {fileID: 28106528}
+  - {fileID: 1436271286}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1078,6 +1128,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1564843166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564843161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58402e6e211772946a00c53754e3c420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 564574327}
+  scoreText: {fileID: 28106529}
+  healthText: {fileID: 527627461}
+  powerUpText: {fileID: 1436271288}
 --- !u!1 &1813355449
 GameObject:
   m_ObjectHideFlags: 0
@@ -1112,12 +1178,15 @@ MonoBehaviour:
   groundManhole_1: {fileID: 8526997330594229747, guid: b60a62e9b4b55054b999788f4aab6f0a, type: 3}
   obstacleMace: {fileID: 5490905699333229828, guid: 0b8213e66a4679345b84b2ef14d429da, type: 3}
   player: {fileID: 564574327}
-  collectable_coin: {fileID: 3891619393696876136, guid: 6918df65c6431d34aad1788dd27e34f8, type: 3}
+  powerup_CrashThrough: {fileID: 771111477852433154, guid: a57e3e76f5fa3d54f8cb19c180faaa7c, type: 3}
+  collectable_Coin: {fileID: 3891619393696876136, guid: 6918df65c6431d34aad1788dd27e34f8, type: 3}
+  powerup_FlyingMode: {fileID: 5931045735985643646, guid: 7e06a76fc5ccca64ea100891cb43c308, type: 3}
   startingLevelParts: 8
   manholePercentage: 0.15
   maxContinuouseGround: 20
   obstacleSpawnPercentage: 0.15
   collectableSpawnPercentage: 0.15
+  crashthroughSpawnPercentage: 0.15
   distanceToGround_1: -1
   distanceToGround_2: 2.5
   maxContinuousPlatform: 4
@@ -1176,7 +1245,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4809016705630905695, guid: fb15851a300a5454aaad74090395caa3, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4809016705630905695, guid: fb15851a300a5454aaad74090395caa3, type: 3}
       propertyPath: m_LocalPosition.x
