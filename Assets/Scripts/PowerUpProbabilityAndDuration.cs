@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class PowerUpProbability
+public class PowerUpProbabilityAndDuration
 {
-    public GameObject powerUpObject;
+    public PowerUp powerUpObject;
     public int probability;
 }

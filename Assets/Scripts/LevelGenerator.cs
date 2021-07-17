@@ -10,9 +10,6 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private Transform groundManhole_1;
     [SerializeField] private Transform obstacleMace;
     [SerializeField] private PlayerMovement player;
-    [SerializeField] private Transform collectable_Coin;
-
-
     public int startingLevelParts;
     public float manholePercentage = 0.15f;
     private Vector3 groundEndPosition;
@@ -209,9 +206,9 @@ public class LevelGenerator : MonoBehaviour
 
         else if (collectableSpawnRNG < collectableSpawnPercentage)
         {
-            Transform coinTrasnform = SpawnCollectable(lastFloatingPartTransform.Find("up").position);
-            var coinDownPosition = coinTrasnform.Find("down").localPosition;
-            coinTrasnform.position -= Vector3.Scale(coinDownPosition, coinTrasnform.localScale);
+            Transform collectableTrasnform = SpawnCollectable(lastFloatingPartTransform.Find("up").position);
+            var collectableDownPosition = collectableTrasnform.Find("down").localPosition;
+            collectableTrasnform.position -= Vector3.Scale(collectableDownPosition, collectableTrasnform.localScale);
         }
         else if (powerUpSpawnRNG < powerUpSpawnPercentage)
         {
@@ -304,7 +301,8 @@ public class LevelGenerator : MonoBehaviour
     private Transform SpawnCollectable(Vector3 spawnPosition)
     {
         Transform CollectableTransform;
-        CollectableTransform = Instantiate(collectable_Coin, spawnPosition, Quaternion.identity);
+        var collectable = GetCollectable.SharedInstance.getCollectable();
+        CollectableTransform = Instantiate(collectable.gameObject, spawnPosition, Quaternion.identity).transform;
         return CollectableTransform;
     }
 
@@ -312,7 +310,8 @@ public class LevelGenerator : MonoBehaviour
     private Transform SpawnPowerUps(Vector3 spawnPosition)
     {
         Transform  PowerUpTransform;
-        PowerUpTransform = Instantiate(GetPowerUp.SharedInstance.getPowerUp(), spawnPosition, Quaternion.identity).transform;
+        var powerup = GetPowerUp.SharedInstance.getPowerUp();
+        PowerUpTransform = Instantiate(powerup.gameObject, spawnPosition, Quaternion.identity).transform;
         return PowerUpTransform;
     }
 

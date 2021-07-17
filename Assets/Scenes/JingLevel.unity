@@ -202,6 +202,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 28106527}
   m_CullTransparentMesh: 1
+--- !u!1 &110628503
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 110628505}
+  - component: {fileID: 110628504}
+  m_Layer: 0
+  m_Name: PowerUpProbs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &110628504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110628503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 846f3ee6b37256d48a265ca42845b923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerUps:
+  - powerUpObject: {fileID: -8888308485843096468, guid: a57e3e76f5fa3d54f8cb19c180faaa7c, type: 3}
+    probability: 1
+  - powerUpObject: {fileID: 5311443762022802161, guid: 7e06a76fc5ccca64ea100891cb43c308, type: 3}
+    probability: 2
+--- !u!4 &110628505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110628503}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.0121002, y: 0.67297006, z: -1.8353757}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &126612081
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -324,6 +372,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &374988647
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 374988649}
+  - component: {fileID: 374988648}
+  m_Layer: 0
+  m_Name: CollectableProbsAndPts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &374988648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374988647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd89d49eb1139394ab7a72319b132f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collectables:
+  - collectableObject: {fileID: -4633972841517028573, guid: 6918df65c6431d34aad1788dd27e34f8, type: 3}
+    probability: 1
+--- !u!4 &374988649
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374988647}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.0121002, y: 0.67297006, z: -1.8353757}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &527627460
 GameObject:
@@ -573,7 +667,6 @@ MonoBehaviour:
   jumpVelocity: 10
   speedIncreaseFactor: 0.1
   jumpTime: 0.5
-  crashThroughDuration: 10
 --- !u!1001 &800121014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1178,15 +1271,12 @@ MonoBehaviour:
   groundManhole_1: {fileID: 8526997330594229747, guid: b60a62e9b4b55054b999788f4aab6f0a, type: 3}
   obstacleMace: {fileID: 5490905699333229828, guid: 0b8213e66a4679345b84b2ef14d429da, type: 3}
   player: {fileID: 564574327}
-  powerup_CrashThrough: {fileID: 771111477852433154, guid: a57e3e76f5fa3d54f8cb19c180faaa7c, type: 3}
-  collectable_Coin: {fileID: 3891619393696876136, guid: 6918df65c6431d34aad1788dd27e34f8, type: 3}
-  powerup_FlyingMode: {fileID: 5931045735985643646, guid: 7e06a76fc5ccca64ea100891cb43c308, type: 3}
   startingLevelParts: 8
   manholePercentage: 0.15
   maxContinuouseGround: 20
   obstacleSpawnPercentage: 0.15
   collectableSpawnPercentage: 0.15
-  crashthroughSpawnPercentage: 0.15
+  powerUpSpawnPercentage: 0.08
   distanceToGround_1: -1
   distanceToGround_2: 2.5
   maxContinuousPlatform: 4

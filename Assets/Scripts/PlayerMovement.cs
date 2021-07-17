@@ -22,12 +22,10 @@ public class PlayerMovement : MonoBehaviour
     private float jumpTimeCounter; //max time you can jump//
     public float jumpTime;
     private bool crashThroughEverything = false;
-    public int crashThroughDuration = 10;
-    public int flyingModeDuration = 20;
     public int powerUpRemainingTime { get; private set; }
     private int powerUpStartTime;
     private bool flyingMode = false;
-
+    private int powerUpDuration;
 
     private void Start()
     {
@@ -100,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
         //calculate time for power ups//
         if (crashThroughEverything == true)
         {
-           powerUpRemainingTime = Mathf.Max(crashThroughDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad)- powerUpStartTime),0);
+           powerUpRemainingTime = Mathf.Max(powerUpDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad)- powerUpStartTime),0);
            if(powerUpRemainingTime == 0)
            {
                 crashThroughEverything = false;
@@ -111,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (flyingMode == true)
         {
-            powerUpRemainingTime = Mathf.Max(flyingModeDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - powerUpStartTime), 0);
+            powerUpRemainingTime = Mathf.Max(powerUpDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - powerUpStartTime), 0);
             if (powerUpRemainingTime == 0)
             {
                 flyingMode = false; print("flying mode set to false");
@@ -128,38 +126,43 @@ public class PlayerMovement : MonoBehaviour
    
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.CompareTag("Collectable"))
+        var collectable = col.gameObject.GetComponent<Collectable>();
+        if (collectable != null)
         {
-            Destroy(col.gameObject);
-            PlayerScores();
+            if (col.gameObject.CompareTag("Collectable"))
+            {
+                Destroy(col.gameObject);
+                playerScore=playerScore+collectable.points;
+            }
         }
 
-        if (col.gameObject.CompareTag("CrashThrough"))
+        var powerup = col.gameObject.GetComponent<PowerUp>();
+        if (powerup != null)
         {
-            Destroy(col.gameObject);
-            DisableAllPowerUps();
-            crashThroughEverything = true;
-            powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
-        }
+            if (col.gameObject.CompareTag("CrashThrough"))
+            {
+                Destroy(col.gameObject);
+                DisableAllPowerUps();
+                crashThroughEverything = true;
+                powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
+                powerUpDuration = powerup.duration;
+            }
 
-
-        if (col.gameObject.CompareTag("FlyingMode"))
-        {
-            Destroy(col.gameObject);
-            DisableAllPowerUps();
-            flyingMode = true; print("flying mode set to true");
-            powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
+            if (col.gameObject.CompareTag("FlyingMode"))
+            {
+                Destroy(col.gameObject);
+                DisableAllPowerUps();
+                flyingMode = true; print("flying mode set to true");
+                powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
+                powerUpDuration = powerup.duration;
+            }
         }
+        
 
     }
 
 
 
-    public int PlayerScores()
-    {
-        playerScore++;
-        return playerScore;
-    }
 
 
 
