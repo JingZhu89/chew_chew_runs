@@ -8,7 +8,7 @@ public class SetInactive : MonoBehaviour
     public void OnBecameInvisible()
     {
 
-        gameObject.SetActive(false);
+        gameObject.transform.parent.gameObject.SetActive(false);
     }
    
 }

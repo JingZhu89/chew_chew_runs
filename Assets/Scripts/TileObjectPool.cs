@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class TileObjectPool : MonoBehaviour
 {
-    public int seasonLength;
     public static TileObjectPool SharedInstance;
     public List<GameObject> pooledGroundTiles_1;
     public GameObject groundTilesToPool_1;
-    public List<GameObject> pooledGroundTiles_2;
-    public GameObject groundTilesToPool_2;
-    public int numberOfgroundTilesToPool;
+    public int numberOfGroundTilesToPool;
+
+    public List<GameObject> pooledWaterTiles;
+    public GameObject waterTilesToPool;
+    public int numberOfWaterTilesToPool;
 
     public List<GameObject> pooledPlatformSingleTiles;
     public GameObject platformSingleTilesToPool;
@@ -43,20 +44,23 @@ public class TileObjectPool : MonoBehaviour
         //create objectpool for groud tiles
         pooledGroundTiles_1 = new List<GameObject>();
         GameObject tmpG1;
-        for (int i = 0; i < numberOfgroundTilesToPool; i++)
+        for (int i = 0; i < numberOfGroundTilesToPool; i++)
         {
             tmpG1 = Instantiate(groundTilesToPool_1);
             tmpG1.SetActive(false);
             pooledGroundTiles_1.Add(tmpG1);
         }
 
-        pooledGroundTiles_2 = new List<GameObject>();
-        GameObject tmpG2;
-        for (int i = 0; i < numberOfgroundTilesToPool; i++)
+
+
+        //create objectpool for water tiles
+        pooledWaterTiles = new List<GameObject>();
+        GameObject tmpW;
+        for (int i = 0; i < numberOfWaterTilesToPool; i++)
         {
-            tmpG2 = Instantiate(groundTilesToPool_2);
-            tmpG2.SetActive(false);
-            pooledGroundTiles_2.Add(tmpG2);
+            tmpW = Instantiate(waterTilesToPool);
+            tmpW.SetActive(false);
+            pooledWaterTiles.Add(tmpW);
         }
 
 
@@ -107,30 +111,29 @@ public class TileObjectPool : MonoBehaviour
 
     public GameObject GetPooledGroundTiles()
     {
-        if (Time.timeSinceLevelLoad < seasonLength)
-        {
-            for (int i = 0; i < numberOfgroundTilesToPool; i++)
+
+            for (int i = 0; i < numberOfGroundTilesToPool; i++)
             {
                 if (!pooledGroundTiles_1[i].activeInHierarchy)
                 {
                     return pooledGroundTiles_1[i];
                 }
             }
-            return null;
-        }
+        return null;
+    }
 
-        else
+
+    public GameObject GetPooledWaterTiles()
+    {
+
+        for (int i = 0; i < numberOfWaterTilesToPool; i++)
         {
-            for (int i = 0; i < numberOfgroundTilesToPool; i++)
+            if (!pooledWaterTiles[i].activeInHierarchy)
             {
-                if (!pooledGroundTiles_2[i].activeInHierarchy)
-                {
-                    return pooledGroundTiles_2[i];
-                }
+                return pooledWaterTiles[i];
             }
-            return null;
         }
-
+        return null;
     }
 
     public GameObject GetPooledPlatformSingleTiles()

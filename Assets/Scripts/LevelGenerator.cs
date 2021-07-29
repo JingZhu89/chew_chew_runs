@@ -237,8 +237,14 @@ public class LevelGenerator : MonoBehaviour
 
     private Transform SpawnManhole(Vector3 spawnPosition)
     {
-        Transform groundPartTransform = Instantiate(groundManhole_1, spawnPosition, Quaternion.identity);
-        return groundPartTransform;
+        GameObject waterTile = TileObjectPool.SharedInstance.GetPooledWaterTiles();
+        if (waterTile != null)
+        {
+            waterTile.transform.position = spawnPosition;
+            waterTile.SetActive(true);
+            return waterTile.transform;
+        }
+        return null;
     }
 
     private Transform SpawnObstacle(Vector3 spawnPosition)
