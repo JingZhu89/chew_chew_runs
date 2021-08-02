@@ -5,9 +5,15 @@ using UnityEngine;
 public class TileObjectPool : MonoBehaviour
 {
     public static TileObjectPool SharedInstance;
+
     public List<GameObject> pooledGroundTiles_1;
     public GameObject groundTilesToPool_1;
     public int numberOfGroundTilesToPool;
+
+
+    public List<GameObject> pooledGroundTiles_2;
+    public GameObject groundTilesToPool_2;
+
 
     public List<GameObject> pooledWaterTiles;
     public GameObject waterTilesToPool;
@@ -49,6 +55,16 @@ public class TileObjectPool : MonoBehaviour
             tmpG1 = Instantiate(groundTilesToPool_1);
             tmpG1.SetActive(false);
             pooledGroundTiles_1.Add(tmpG1);
+        }
+
+
+        pooledGroundTiles_2 = new List<GameObject>();
+        GameObject tmpG2;
+        for (int i = 0; i < numberOfGroundTilesToPool; i++)
+        {
+            tmpG2 = Instantiate(groundTilesToPool_2);
+            tmpG2.SetActive(false);
+            pooledGroundTiles_2.Add(tmpG2);
         }
 
 
@@ -114,11 +130,16 @@ public class TileObjectPool : MonoBehaviour
 
             for (int i = 0; i < numberOfGroundTilesToPool; i++)
             {
-                if (!pooledGroundTiles_1[i].activeInHierarchy)
+                if (!pooledGroundTiles_1[i].activeInHierarchy && i % 2 == 0)
                 {
                     return pooledGroundTiles_1[i];
                 }
-            }
+                if (!pooledGroundTiles_2[i].activeInHierarchy && i % 2 == 1)
+                {
+                    return pooledGroundTiles_2[i];
+                }
+
+        }
         return null;
     }
 
