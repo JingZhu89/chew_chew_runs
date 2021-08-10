@@ -7,7 +7,7 @@ public class GetCollectable : MonoBehaviour
 {
 
     public static GetCollectable SharedInstance;
-    public List<CollectableProbabilityAndPoints> collectables;
+    public List<CollectableProbability> collectables;
 
     private void Awake()
     {

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CollectableProbabilityAndPoints
+public class CollectableProbability
+
 {
     public Collectable collectableObject;
     public int probability;

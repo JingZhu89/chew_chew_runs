@@ -26,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
     private int powerUpStartTime;
     private bool flyingMode = false;
     private int powerUpDuration;
+    private bool jumpingUp;
+    private bool jumpingDown;
 
     private void Start()
     {
@@ -37,8 +39,8 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+   
 
-        animator.SetBool("IsJumping", jump);
         if (Input.GetButtonDown("Jump"))
         {
             jump = true;
@@ -62,7 +64,32 @@ public class PlayerMovement : MonoBehaviour
     {
 
         animator.SetFloat("Speed", runSpeed);
+        animator.SetBool("IsJumpingUp", jumpingUp);
+        animator.SetBool("IsJumpingDown", jumpingDown);
         Vector2 velocity = rb.velocity;
+
+        if (velocity.y > 0)
+        {
+            jumpingUp = true;
+        }
+        else
+        {
+            jumpingUp = false;
+
+        }
+
+
+
+        if (velocity.y < 0)
+        {
+            jumpingDown = true;
+        }
+        else
+        {
+            jumpingDown = false;
+
+        }
+
         velocity.x = runSpeed*(1+Time.timeSinceLevelLoad*speedIncreaseFactor);
 
             if (jump == true && isGrounded == true && flyingMode==false)
@@ -96,6 +123,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         //calculate time for power ups//
+        animator.SetBool("IsRolling", crashThroughEverything);
         if (crashThroughEverything == true)
         {
            powerUpRemainingTime = Mathf.Max(powerUpDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad)- powerUpStartTime),0);
@@ -106,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         }
-
+        animator.SetBool("IsFlying", flyingMode);
         if (flyingMode == true)
         {
             powerUpRemainingTime = Mathf.Max(powerUpDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - powerUpStartTime), 0);
@@ -156,9 +184,8 @@ public class PlayerMovement : MonoBehaviour
                 powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
                 powerUpDuration = powerup.duration;
             }
-        }
-        
 
+        }
     }
 
 
@@ -169,6 +196,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D col)
     {
+        float destroyDelay = 0;
+        if (col.gameObject.name.Contains("Rock1"))
+        {
+            col.gameObject.GetComponent<Animator>().SetBool("Rock1GotHit", true);
+            destroyDelay = 0.5f;
+        }
 
         if (col.collider.gameObject.CompareTag("Obstacle") && crashThroughEverything == false)
 
@@ -177,7 +210,7 @@ public class PlayerMovement : MonoBehaviour
                 
             {
                 healthScore--;
-                Destroy(col.gameObject);
+                Destroy(col.gameObject, destroyDelay);
             }
             else
             {
@@ -188,7 +221,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (col.collider.gameObject.CompareTag("Obstacle") && crashThroughEverything == true)
         {
-            Destroy(col.gameObject);
+            Destroy(col.gameObject, destroyDelay);
         }
     }
 
