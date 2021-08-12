@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
 
     public float runSpeed = 5.0f;
+    private float currentSpeed;
     public float jumpVelocity = 1.0f;
     public float speedIncreaseFactor = 1.0f;
     bool jump = false;
@@ -63,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
 
-        animator.SetFloat("Speed", runSpeed);
+        animator.SetFloat("Speed", currentSpeed);
         animator.SetBool("IsJumpingUp", jumpingUp);
         animator.SetBool("IsJumpingDown", jumpingDown);
         Vector2 velocity = rb.velocity;
@@ -91,6 +92,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
         velocity.x = runSpeed*(1+Time.timeSinceLevelLoad*speedIncreaseFactor);
+        currentSpeed = velocity.x;
+
 
             if (jump == true && isGrounded == true && flyingMode==false)
             {
@@ -146,7 +149,7 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-
+        print("current speed is" + currentSpeed);
 
     }
 
@@ -206,6 +209,7 @@ public class PlayerMovement : MonoBehaviour
         if (col.collider.gameObject.CompareTag("Obstacle") && crashThroughEverything == false)
 
         {
+            DisableAllPowerUps();
             if (healthScore > 1)
                 
             {
