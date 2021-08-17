@@ -14,7 +14,8 @@ public class PlayerMovement : MonoBehaviour
     public float speedIncreaseFactor = 1.0f;
     bool jump = false;
     Rigidbody2D rb;
-    Animator animator;
+
+
     private float bottomOfScreen;
     private bool isGrounded;
     public int playerScore { get; private set; }
@@ -22,13 +23,28 @@ public class PlayerMovement : MonoBehaviour
     private bool jumping = false;
     private float jumpTimeCounter; //max time you can jump//
     public float jumpTime;
-    private bool crashThroughEverything = false;
-    public int powerUpRemainingTime { get; private set; }
-    private int powerUpStartTime;
-    private bool flyingMode = false;
-    private int powerUpDuration;
     private bool jumpingUp;
     private bool jumpingDown;
+       
+
+    public int powerUpRemainingTime { get; private set; }
+    private int powerUpStartTime;
+    private int powerUpDuration;
+
+    private bool flyingMode = false;
+    private bool crashThroughEverything = false;
+    private bool freeze = false;
+
+    private bool gotHit;
+    public int gotHitRemainingTime { get; private set; }
+    private int gotHitStartTime;
+    public int gotHitDuration;
+
+    Animator animator;
+    private string currentState;
+    public float speedThreshold1;
+    public float speedThreshold2;
+    public float freezeSpeed;
 
     private void Start()
     {
@@ -64,9 +80,6 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
 
-        animator.SetFloat("Speed", currentSpeed);
-        animator.SetBool("IsJumpingUp", jumpingUp);
-        animator.SetBool("IsJumpingDown", jumpingDown);
         Vector2 velocity = rb.velocity;
 
         if (velocity.y > 0)
@@ -91,7 +104,15 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        velocity.x = runSpeed*(1+Time.timeSinceLevelLoad*speedIncreaseFactor);
+        if (freeze == true)
+        {
+            velocity.x = freezeSpeed;
+        }
+        else
+        {
+            velocity.x = runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor);
+        }
+
         currentSpeed = velocity.x;
 
 
@@ -124,9 +145,9 @@ public class PlayerMovement : MonoBehaviour
 
         rb.velocity = velocity;
 
-
+        print("current speed is" + currentSpeed);
         //calculate time for power ups//
-        animator.SetBool("IsRolling", crashThroughEverything);
+
         if (crashThroughEverything == true)
         {
            powerUpRemainingTime = Mathf.Max(powerUpDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad)- powerUpStartTime),0);
@@ -137,7 +158,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         }
-        animator.SetBool("IsFlying", flyingMode);
+
         if (flyingMode == true)
         {
             powerUpRemainingTime = Mathf.Max(powerUpDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - powerUpStartTime), 0);
@@ -146,10 +167,85 @@ public class PlayerMovement : MonoBehaviour
                 flyingMode = false; print("flying mode set to false");
             }
 
+        }
+
+        if (gotHit == true)
+        {
+            gotHitRemainingTime = Mathf.Max(gotHitDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - gotHitStartTime), 0);
+            if (gotHitRemainingTime == 0)
+                gotHit = false;
 
         }
 
-        print("current speed is" + currentSpeed);
+
+
+ 
+
+
+        //determin which animation to play
+        if( flyingMode==false && crashThroughEverything==false && gotHit==false && currentSpeed==0.0f && isGrounded==true)
+        {
+            ChangePlayerAnimationState("chuchu idle");
+
+        }
+        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed <= speedThreshold1 && isGrounded == true)
+        {
+            ChangePlayerAnimationState("chuchu run");
+        }
+
+        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed > speedThreshold1 && isGrounded == true)
+        {
+            ChangePlayerAnimationState("chuchu run fast");
+        }
+
+        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed <= speedThreshold1 && jumpingUp == true)
+        {
+            ChangePlayerAnimationState("chuchu jumpup");
+        }
+
+        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed < speedThreshold1 && jumpingDown == true)
+        {
+            ChangePlayerAnimationState("chuchu jumpdown");
+        }
+
+        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed > speedThreshold1 && jumpingUp == true)
+        {
+            ChangePlayerAnimationState("chuchu jumpup fast");
+        }
+
+        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed > speedThreshold1 && jumpingDown == true)
+        {
+            ChangePlayerAnimationState("chuchu jumpdown fast");
+        }
+        
+        if (flyingMode == false && crashThroughEverything == false && isGrounded ==true && gotHit == true )
+        {
+            ChangePlayerAnimationState("chuchu run hurt");
+        }
+
+        if (flyingMode == false && crashThroughEverything == false && jumpingUp == true && gotHit == true)
+        {
+            ChangePlayerAnimationState("chuchu jumpup hurt");
+        }
+
+
+        if (flyingMode == false && crashThroughEverything == false && jumpingDown == true && gotHit == true)
+        {
+            ChangePlayerAnimationState("chuchu jumpdown hurt");
+        }
+
+
+
+        if (flyingMode == true)
+        {
+            ChangePlayerAnimationState("chuchu fly");
+        }
+        if(crashThroughEverything == true)
+        {
+            ChangePlayerAnimationState("chuchu roll");
+        }
+
+
 
     }
 
@@ -188,13 +284,18 @@ public class PlayerMovement : MonoBehaviour
                 powerUpDuration = powerup.duration;
             }
 
+            if (col.gameObject.CompareTag("Freeze"))
+            {
+                Destroy(col.gameObject);
+                DisableAllPowerUps();
+                freeze = true; print("slowdown set to true");
+                powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
+                powerUpDuration = powerup.duration;
+            }
+
+
         }
     }
-
-
-
-
-
 
 
     private void OnCollisionEnter2D(Collision2D col)
@@ -210,6 +311,8 @@ public class PlayerMovement : MonoBehaviour
 
         {
             DisableAllPowerUps();
+            gotHit = true;
+            gotHitStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
             if (healthScore > 1)
                 
             {
@@ -254,8 +357,22 @@ public class PlayerMovement : MonoBehaviour
 
         crashThroughEverything = false;
         flyingMode = false;
+        freeze = false;
 
     }
+
+
+    private void ChangePlayerAnimationState(string newState)
+    {
+
+        if (currentState == newState) return;
+
+        animator.Play(newState);
+
+        currentState = newState;
+
+    }
+
 
 
 

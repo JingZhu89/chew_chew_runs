@@ -322,7 +322,7 @@ public class LevelGenerator : MonoBehaviour
         Transform ObstacleTransform;
         var obstacle = GetObstacle.SharedInstance.getObstacle();
         ObstacleTransform = Instantiate(obstacle, spawnPosition, Quaternion.identity).transform;
-       return ObstacleTransform;
+        return ObstacleTransform;
     }
 
 
