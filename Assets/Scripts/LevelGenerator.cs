@@ -198,9 +198,9 @@ public class LevelGenerator : MonoBehaviour
 
         if (obstaclesSpawnRNG < obstacleSpawnPercentage)
         {
-            Transform maceTransform = SpawnObstacle(lastFloatingPartTransform.Find("up").position);
-            var obstacleDownPosition = maceTransform.Find("down").localPosition;
-            maceTransform.position -= Vector3.Scale(obstacleDownPosition, maceTransform.localScale);
+            Transform obstacleTransform = SpawnObstacle(lastFloatingPartTransform.Find("up").position);
+            var obstacleDownPosition = obstacleTransform.Find("down").localPosition;
+            obstacleTransform.position -= Vector3.Scale(obstacleDownPosition, obstacleTransform.localScale);
         }
 
         else if (collectableSpawnRNG < collectableSpawnPercentage)

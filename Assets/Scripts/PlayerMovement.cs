@@ -295,30 +295,24 @@ public class PlayerMovement : MonoBehaviour
 
 
         }
-    }
 
-
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-        float destroyDelay = 0;
-        if (col.gameObject.name.Contains("Rock1"))
+        if (col.gameObject.name.Contains("cactus"))
         {
-            col.gameObject.GetComponent<Animator>().SetBool("Rock1GotHit", true);
-            destroyDelay = 0.5f;
+            col.gameObject.GetComponent<Animator>().SetBool("CactusGotHit", true); print("cactus got hit");
         }
 
-        if (col.collider.gameObject.CompareTag("Obstacle") && crashThroughEverything == false)
+        if (col.gameObject.CompareTag("Obstacle") && crashThroughEverything == false)
 
         {
             DisableAllPowerUps();
             gotHit = true;
             gotHitStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
             if (healthScore > 1)
-                
+
             {
-                healthScore--;
-                Destroy(col.gameObject, destroyDelay);
+                healthScore--; print("obstacle hit");
             }
+
             else
             {
                 healthScore--;
@@ -326,11 +320,10 @@ public class PlayerMovement : MonoBehaviour
 
             }
         }
-        else if (col.collider.gameObject.CompareTag("Obstacle") && crashThroughEverything == true)
-        {
-            Destroy(col.gameObject, destroyDelay);
-        }
     }
+
+
+
 
     private void OnCollisionStay2D(Collision2D col)
     {
