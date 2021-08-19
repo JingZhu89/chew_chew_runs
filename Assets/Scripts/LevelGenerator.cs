@@ -14,6 +14,8 @@ public class LevelGenerator : MonoBehaviour
     private Vector3 groundEndPosition;
     private Vector3 floatingEndPosition;
     public int maxContinuouseGround = 20;
+    public int minDistanceBetweenObstacles = 3;
+    public int minDistanceBetweenManholes = 2;
     private bool manholeJustSpawned = false;
     public float obstacleSpawnPercentage = 0.10f;
     public float collectableSpawnPercentage = 0.15f;
@@ -24,7 +26,9 @@ public class LevelGenerator : MonoBehaviour
     public int maxContinuousPlatform = 5;
     public float minDistanceBetweenPlatformSets = 5.0f;
     public float maxDistanceBetweenPlatformSets = 10.0f;
- 
+
+    int numberOfGroundSpawned;
+    int numberOfNoObstacleSpawned;
 
 
 
@@ -67,10 +71,10 @@ public class LevelGenerator : MonoBehaviour
         float collectableSpawnRNG = Random.Range(0.0f, 1.0f);
         float powerUpSpawnRNG = Random.Range(0.0f, 1.0f);
 
-        int numberOfGroundSpawned = 0;
+
 
         
-        if ((Random.Range(0.0f, 1.0f)< manholePercentage || numberOfGroundSpawned>maxContinuouseGround) && manholeJustSpawned == false && obstacleJustSpawned == false)
+        if ((Random.Range(0.0f, 1.0f)< manholePercentage || numberOfGroundSpawned>maxContinuouseGround) && obstacleJustSpawned == false && numberOfGroundSpawned > minDistanceBetweenManholes)
         {
              lastGroundPartTransform = SpawnManhole(groundEndPosition);
              manholeJustSpawned = true;
@@ -79,19 +83,21 @@ public class LevelGenerator : MonoBehaviour
         else 
         {
             lastGroundPartTransform = SpawnGround(groundEndPosition);
-            numberOfGroundSpawned++;
+            numberOfGroundSpawned++; print("number of ground spawned =" + numberOfGroundSpawned);
 
-            if (obstacleJustSpawned == false && obstaclesSpawnRNG < obstacleSpawnPercentage && manholeJustSpawned == false)
+            if (obstacleJustSpawned == false && obstaclesSpawnRNG < obstacleSpawnPercentage && manholeJustSpawned == false && numberOfNoObstacleSpawned > minDistanceBetweenObstacles)
             {
                 Transform obstacleTransform= SpawnObstacle(lastGroundPartTransform.Find("up").position);
                 var obstacleDownPosition = obstacleTransform.Find("down").localPosition;
-                obstacleTransform.position -= Vector3.Scale(obstacleDownPosition, obstacleTransform.localScale);
-                               
+                obstacleTransform.position -= Vector3.Scale(obstacleDownPosition, obstacleTransform.localScale);        
                 obstacleJustSpawned = true;
+                numberOfNoObstacleSpawned = 0;
             }
 
             else
-            { obstacleJustSpawned = false;
+            {
+                obstacleJustSpawned = false;
+                numberOfNoObstacleSpawned++; print("number of noObstacle spawned =" + numberOfNoObstacleSpawned);
 
                 if (collectableSpawnRNG < collectableSpawnPercentage)
                 {

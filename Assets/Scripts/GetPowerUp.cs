@@ -8,6 +8,7 @@ public class GetPowerUp : MonoBehaviour
     public static GetPowerUp SharedInstance;
     public List<PowerUpProbabilityAndDuration> powerUps;
 
+
     private void Awake()
     {
         SharedInstance = this;
@@ -15,11 +16,25 @@ public class GetPowerUp : MonoBehaviour
 
     public PowerUp getPowerUp()
     {
+        // TODO - change this based on player speed
+        bool playerIsReallyFast = PlayerMovement.SharedInstance.currentSpeed >= 15;
+
+
+        List<PowerUpProbabilityAndDuration> filteredPowerups;
+        if (playerIsReallyFast)
+        {
+            filteredPowerups = powerUps;
+        }
+        else
+        {
+            filteredPowerups = powerUps.Where(p => !p.onlySpawnWhenPlayerIsFast).ToList();
+        }
+
         int runningTotal = 0;
-        int sum = powerUps.Select(p => p.probability).Sum();
+        int sum = filteredPowerups.Select(p => p.probability).Sum();
         int rand = Random.Range(0, sum);
 
-        foreach (var powerUp in powerUps)
+        foreach (var powerUp in filteredPowerups)
         {
             runningTotal = runningTotal + powerUp.probability;
             if (rand<runningTotal)

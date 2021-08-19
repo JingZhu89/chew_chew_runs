@@ -7,4 +7,5 @@ public class PowerUpProbabilityAndDuration
 {
     public PowerUp powerUpObject;
     public int probability;
+    public bool onlySpawnWhenPlayerIsFast;
 }

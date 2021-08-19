@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 public class PlayerMovement : MonoBehaviour
 {
     // Start is called before the first frame update
-
+    public static PlayerMovement SharedInstance;
     public float runSpeed = 5.0f;
-    private float currentSpeed;
+    public float currentSpeed;
     public float jumpVelocity = 1.0f;
     public float speedIncreaseFactor = 1.0f;
     bool jump = false;
@@ -43,8 +43,13 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
     private string currentState;
     public float speedThreshold1;
-    public float speedThreshold2;
     public float freezeSpeed;
+
+
+    private void Awake()
+    {
+        SharedInstance = this;
+    }
 
     private void Start()
     {
@@ -79,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-
+        
         Vector2 velocity = rb.velocity;
 
         if (velocity.y > 0)
@@ -104,18 +109,27 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
+
+        //x velocity calculation//
         if (freeze == true)
         {
             velocity.x = freezeSpeed;
+        }
+        if (gotHit==true)
+        {
+            velocity.x = 0;
         }
         else
         {
             velocity.x = runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor);
         }
 
+       
+
         currentSpeed = velocity.x;
 
 
+        //y velocity calculation//
             if (jump == true && isGrounded == true && flyingMode==false)
             {
                 velocity.y = jumpVelocity;
@@ -145,7 +159,7 @@ public class PlayerMovement : MonoBehaviour
 
         rb.velocity = velocity;
 
-        print("current speed is" + currentSpeed);
+        //print("current speed is" + currentSpeed);
         //calculate time for power ups//
 
         if (crashThroughEverything == true)
@@ -301,6 +315,11 @@ public class PlayerMovement : MonoBehaviour
             col.gameObject.GetComponent<Animator>().SetBool("CactusGotHit", true); print("cactus got hit");
         }
 
+        if (col.gameObject.name.Contains("spikes"))
+        {
+            col.gameObject.GetComponent<Animator>().SetBool("SpikeGotHit", true); print("spike got hit");
+        }
+
         if (col.gameObject.CompareTag("Obstacle") && crashThroughEverything == false)
 
         {
@@ -327,6 +346,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D col)
     {
+
+
 
         if (col.collider.gameObject.CompareTag("Platform") && col.relativeVelocity.y==0)
         {
