@@ -14,7 +14,6 @@ public class LevelGenerator : MonoBehaviour
     private Vector3 groundEndPosition;
     private Vector3 floatingEndPosition;
     public int maxContinuouseGround = 20;
-    public int minDistanceBetweenObstacles = 3;
     public int minDistanceBetweenManholes = 2;
     private bool manholeJustSpawned = false;
     public float obstacleSpawnPercentage = 0.10f;
@@ -26,11 +25,9 @@ public class LevelGenerator : MonoBehaviour
     public int maxContinuousPlatform = 5;
     public float minDistanceBetweenPlatformSets = 5.0f;
     public float maxDistanceBetweenPlatformSets = 10.0f;
-
     int numberOfGroundSpawned;
     int numberOfNoObstacleSpawned;
-
-
+    public int minDistanceBetweenObstacles=4;
 
 
     // spawn initial parts//
@@ -83,9 +80,12 @@ public class LevelGenerator : MonoBehaviour
         else 
         {
             lastGroundPartTransform = SpawnGround(groundEndPosition);
+            manholeJustSpawned = false;
+
+
             numberOfGroundSpawned++; print("number of ground spawned =" + numberOfGroundSpawned);
 
-            if (obstacleJustSpawned == false && obstaclesSpawnRNG < obstacleSpawnPercentage && manholeJustSpawned == false && numberOfNoObstacleSpawned > minDistanceBetweenObstacles)
+            if (obstacleJustSpawned == false && obstaclesSpawnRNG < obstacleSpawnPercentage && manholeJustSpawned == false )
             {
                 Transform obstacleTransform= SpawnObstacle(lastGroundPartTransform.Find("up").position);
                 var obstacleDownPosition = obstacleTransform.Find("down").localPosition;
@@ -96,9 +96,8 @@ public class LevelGenerator : MonoBehaviour
 
             else
             {
+                numberOfNoObstacleSpawned++;
                 obstacleJustSpawned = false;
-                numberOfNoObstacleSpawned++; print("number of noObstacle spawned =" + numberOfNoObstacleSpawned);
-
                 if (collectableSpawnRNG < collectableSpawnPercentage)
                 {
                     Transform collectableTrasnform = SpawnCollectable(lastGroundPartTransform.Find("up").position);
@@ -118,8 +117,6 @@ public class LevelGenerator : MonoBehaviour
 
             }
 
-
-            manholeJustSpawned = false;
         }
         
         groundEndPosition = lastGroundPartTransform.Find("right").position + (lastGroundPartTransform.Find("right").position - lastGroundPartTransform.Find("left").position) / 2;

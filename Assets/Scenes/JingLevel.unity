@@ -707,12 +707,12 @@ MonoBehaviour:
   player: {fileID: 564574327}
   startingLevelParts: 8
   manholePercentage: 0.15
-  maxContinuouseGround: 20
-  minDistanceBetweenObstacles: 3
+  maxContinuouseGround: 10
+  minDistanceBetweenObstacles: 2
   minDistanceBetweenManholes: 2
   obstacleSpawnPercentage: 0.15
   collectableSpawnPercentage: 0.15
-  powerUpSpawnPercentage: 0.08
+  powerUpSpawnPercentage: 0.05
   distanceToGround_1: -0.5
   distanceToGround_2: 2.5
   maxContinuousPlatform: 4

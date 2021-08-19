@@ -115,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.x = freezeSpeed;
         }
-        if (gotHit==true)
+        else if (gotHit == true)
         {
             velocity.x = 0;
         }
@@ -123,8 +123,7 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.x = runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor);
         }
-
-       
+  
 
         currentSpeed = velocity.x;
 
