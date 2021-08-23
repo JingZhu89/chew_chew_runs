@@ -38,6 +38,25 @@ public class TileObjectPool : MonoBehaviour
     public int numberOfPlatformMiddleTilesToPool;
 
 
+    public List<GameObject> pooledTallPlatformSingleTiles;
+    public GameObject tallPlatformSingleTilesToPool;
+    public int numberOfTallPlatformSingleTilesToPool;
+
+
+    public List<GameObject> pooledTallPlatformLeftTiles;
+    public GameObject tallPlatformLeftTilesToPool;
+    public int numberOfTallPlatformLeftTilesToPool;
+
+
+    public List<GameObject> pooledTallPlatformRightTiles;
+    public GameObject tallPlatformRightTilesToPool;
+    public int numberOfTallPlatformRightTilesToPool;
+
+    public List<GameObject> pooledTallPlatformMiddleTiles;
+    public GameObject tallPlatformMiddleTilesToPool;
+    public int numberOfTallPlatformMiddleTilesToPool;
+
+
     // Start is called before the first frame update
 
     private void Awake()
@@ -80,7 +99,7 @@ public class TileObjectPool : MonoBehaviour
         }
 
 
-        //create object pool for platform tiles
+        //create object pool for flat platform tiles
 
         pooledPlatformSingleTiles = new List<GameObject>();
         GameObject tmp1;
@@ -121,6 +140,46 @@ public class TileObjectPool : MonoBehaviour
             pooledPlatformRightTiles.Add(tmp4);
         }
 
+        //create object pool for tall paltform tiles
+
+        pooledTallPlatformSingleTiles = new List<GameObject>();
+        GameObject tmp5;
+        for (int i = 0; i < numberOfTallPlatformSingleTilesToPool; i++)
+        {
+            tmp5 = Instantiate(tallPlatformSingleTilesToPool);
+            tmp5.SetActive(false);
+            pooledTallPlatformSingleTiles.Add(tmp5);
+        }
+
+
+        pooledTallPlatformMiddleTiles = new List<GameObject>();
+        GameObject tmp6;
+        for (int i = 0; i < numberOfTallPlatformMiddleTilesToPool; i++)
+        {
+            tmp6 = Instantiate(tallPlatformMiddleTilesToPool);
+            tmp6.SetActive(false);
+            pooledTallPlatformMiddleTiles.Add(tmp6);
+        }
+
+
+        pooledTallPlatformLeftTiles = new List<GameObject>();
+        GameObject tmp7;
+        for (int i = 0; i < numberOfTallPlatformLeftTilesToPool; i++)
+        {
+            tmp7 = Instantiate(tallPlatformLeftTilesToPool);
+            tmp7.SetActive(false);
+            pooledTallPlatformLeftTiles.Add(tmp7);
+        }
+
+
+        pooledTallPlatformRightTiles = new List<GameObject>();
+        GameObject tmp8;
+        for (int i = 0; i < numberOfTallPlatformRightTilesToPool; i++)
+        {
+            tmp8 = Instantiate(tallPlatformRightTilesToPool);
+            tmp8.SetActive(false);
+            pooledTallPlatformRightTiles.Add(tmp8);
+        }
     }
 
 //get pooled objects//
@@ -205,7 +264,56 @@ public class TileObjectPool : MonoBehaviour
         }
         return null;
     }
+    // tall platforms
 
+    public GameObject GetPooledTallPlatformSingleTiles()
+    {
+        for (int i = 0; i < numberOfTallPlatformSingleTilesToPool; i++)
+        {
+            if (!pooledTallPlatformSingleTiles[i].activeInHierarchy)
+            {
+                return pooledTallPlatformSingleTiles[i];
+            }
+        }
+        return null;
+    }
+
+    public GameObject GetPooledTallPlatformMiddleTiles()
+    {
+        for (int i = 0; i < numberOfTallPlatformMiddleTilesToPool; i++)
+        {
+            if (!pooledTallPlatformMiddleTiles[i].activeInHierarchy)
+            {
+                return pooledTallPlatformMiddleTiles[i];
+            }
+        }
+        return null;
+    }
+
+    public GameObject GetPooledTallPlatformLeftTiles()
+    {
+        for (int i = 0; i < numberOfTallPlatformLeftTilesToPool; i++)
+        {
+            if (!pooledTallPlatformLeftTiles[i].activeInHierarchy)
+            {
+                return pooledTallPlatformLeftTiles[i];
+            }
+        }
+        return null;
+    }
+
+
+    public GameObject GetPooledTallPlatformRightTiles()
+    {
+        for (int i = 0; i < numberOfTallPlatformRightTilesToPool; i++)
+        {
+            if (!pooledTallPlatformRightTiles[i].activeInHierarchy)
+            {
+                return pooledTallPlatformRightTiles[i];
+            }
+        }
+        return null;
+    }
 
 }
 

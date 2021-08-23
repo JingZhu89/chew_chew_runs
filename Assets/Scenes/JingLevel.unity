@@ -708,16 +708,18 @@ MonoBehaviour:
   startingLevelParts: 8
   manholePercentage: 0.15
   maxContinuouseGround: 10
-  minDistanceBetweenObstacles: 2
   minDistanceBetweenManholes: 2
   obstacleSpawnPercentage: 0.15
   collectableSpawnPercentage: 0.15
   powerUpSpawnPercentage: 0.05
   distanceToGround_1: -0.5
   distanceToGround_2: 2.5
+  floatingDistance1Vs2Ratio: 0.5
   maxContinuousPlatform: 4
   minDistanceBetweenPlatformSets: 5
   maxDistanceBetweenPlatformSets: 10
+  minDistanceBetweenObstacles: 4
+  floatingTallVsFlatRatio: 0.5
 --- !u!4 &1813355451
 Transform:
   m_ObjectHideFlags: 0
@@ -764,6 +766,18 @@ MonoBehaviour:
   pooledPlatformMiddleTiles: []
   platformMiddleTilesToPool: {fileID: 3251008648300895125, guid: 311b8d066e829c14b965522b6e70af50, type: 3}
   numberOfPlatformMiddleTilesToPool: 20
+  pooledTallPlatformSingleTiles: []
+  tallPlatformSingleTilesToPool: {fileID: 8707985945689555407, guid: 4d347ba6aa179304597b8312c7bf7624, type: 3}
+  numberOfTallPlatformSingleTilesToPool: 20
+  pooledTallPlatformLeftTiles: []
+  tallPlatformLeftTilesToPool: {fileID: 896792194219285, guid: 68ab3fe1e6db2534aa40d5bcbab8b895, type: 3}
+  numberOfTallPlatformLeftTilesToPool: 20
+  pooledTallPlatformRightTiles: []
+  tallPlatformRightTilesToPool: {fileID: 5830923743777101850, guid: c645c7ea7853b7f408481d96788bd303, type: 3}
+  numberOfTallPlatformRightTilesToPool: 20
+  pooledTallPlatformMiddleTiles: []
+  tallPlatformMiddleTilesToPool: {fileID: 6556592981816822010, guid: ed09a2d8a6f777e49abb93d81561dfae, type: 3}
+  numberOfTallPlatformMiddleTilesToPool: 20
 --- !u!212 &1894473371 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 6359292005721734209, guid: 1c29bfcc62e14844387f5ce7751aa385, type: 3}
