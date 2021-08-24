@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpVelocity = 1.0f;
     public float speedIncreaseFactor = 1.0f;
     bool jump = false;
+    bool squeeze = false;
     Rigidbody2D rb;
 
 
@@ -78,6 +79,15 @@ public class PlayerMovement : MonoBehaviour
         {
             healthScore = 0;
             SceneManager.LoadScene("MainMenu");
+        }
+
+        if (Input.GetButtonDown("Down"))
+        {
+            squeeze = true; print("squeeze set to true");
+        }
+        if (Input.GetButtonUp("Down"))
+        {
+            squeeze = false; print("squeeze set to false");
         }
 
     }
@@ -196,20 +206,34 @@ public class PlayerMovement : MonoBehaviour
 
 
         //determin which animation to play
-        if( flyingMode==false && crashThroughEverything==false && gotHit==false && currentSpeed==0.0f && isGrounded==true)
+        if( flyingMode==false && crashThroughEverything==false && gotHit==false && currentSpeed==0.0f && isGrounded==true && squeeze ==false)
         {
             ChangePlayerAnimationState("chuchu idle");
 
         }
-        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed <= speedThreshold1 && isGrounded == true)
+        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze == false)
         {
             ChangePlayerAnimationState("chuchu run");
+
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed > speedThreshold1 && isGrounded == true)
+        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == false)
         {
             ChangePlayerAnimationState("chuchu run fast");
         }
+
+
+        if (flyingMode == false && crashThroughEverything == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze==true)
+        {
+            ChangePlayerAnimationState("chuchu squeeze");
+        }
+
+        if (flyingMode == false && crashThroughEverything == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == true)
+        {
+            ChangePlayerAnimationState("chuchu squeeze fast");
+        }
+        
+
 
         if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed <= speedThreshold1 && jumpingUp == true)
         {
