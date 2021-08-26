@@ -271,15 +271,24 @@ public class PlayerMovement : MonoBehaviour
             ChangePlayerAnimationState("chuchu jumpdown hurt");
         }
 
-
-
-        if (flyingMode == true)
+        
+        if (flyingMode == true && squeeze == false)
         {
             ChangePlayerAnimationState("chuchu fly");
         }
-        if(crashThroughEverything == true)
+        if(crashThroughEverything == true && squeeze == false)
         {
             ChangePlayerAnimationState("chuchu roll");
+        }
+
+
+        if (flyingMode == true && squeeze == true)
+        {
+            ChangePlayerAnimationState("chuchu squeeze excited fly");
+        }
+        if (crashThroughEverything == true && squeeze == true)
+        {
+            ChangePlayerAnimationState("chuchu squeeze excited");
         }
 
 

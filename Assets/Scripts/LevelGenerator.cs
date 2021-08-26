@@ -50,14 +50,16 @@ public class LevelGenerator : MonoBehaviour
 
     private void Update()
     {
+
+        if (Vector3.Distance(player.transform.position, floatingEndPosition) < PLAYER_DISTANCE_SPAWN_PART)
+        {
+            SpawnFloatingPart();
+        }
         if (Vector3.Distance(player.transform.position,groundEndPosition) < PLAYER_DISTANCE_SPAWN_PART )
         {
             SpawnGroundPart();
         }
-        if (Vector3.Distance(player.transform.position,floatingEndPosition)< PLAYER_DISTANCE_SPAWN_PART)
-        {
-            SpawnFloatingPart();
-        }
+
     }
 
 
@@ -82,12 +84,20 @@ public class LevelGenerator : MonoBehaviour
         else 
         {
             lastGroundPartTransform = SpawnGround(groundEndPosition);
+            float castDistance = 1.5f;
+            var mask = LayerMask.GetMask("floating platform");
+            RaycastHit2D hitleft = Physics2D.Raycast(lastGroundPartTransform.Find("left").position, Vector2.up, castDistance, mask);
+            RaycastHit2D hitright = Physics2D.Raycast(lastGroundPartTransform.Find("right").position, Vector2.up, castDistance, mask);
+            RaycastHit2D hitmiddle = Physics2D.Raycast(lastGroundPartTransform.Find("up").position, Vector2.up, castDistance, mask);
             manholeJustSpawned = false;
 
 
             numberOfGroundSpawned++; print("number of ground spawned =" + numberOfGroundSpawned);
 
-            if (obstacleJustSpawned == false && obstaclesSpawnRNG < obstacleSpawnPercentage && manholeJustSpawned == false )
+
+            //spawn obstable and collectable on ground parts//
+
+            if (obstacleJustSpawned == false && obstaclesSpawnRNG < obstacleSpawnPercentage && manholeJustSpawned == false && hitleft.collider==null && hitright.collider==null && hitmiddle.collider==null)
             {
                 Transform obstacleTransform= SpawnObstacle(lastGroundPartTransform.Find("up").position);
                 var obstacleDownPosition = obstacleTransform.Find("down").localPosition;
