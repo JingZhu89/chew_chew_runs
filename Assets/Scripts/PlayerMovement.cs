@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -45,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
     private string currentState;
     public float speedThreshold1;
     public float freezeSpeed;
-
+    private Light2D playerLt;
 
     private void Awake()
     {
@@ -58,6 +58,8 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         bottomOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)).y;
         healthScore = 100;
+        playerLt = GetComponentInChildren<Light2D>();
+        playerLt.enabled = false;print("playerLtdisabled");
     }
     // Update is called once per frame
     void Update()
@@ -83,11 +85,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Down"))
         {
-            squeeze = true; print("squeeze set to true");
+            squeeze = true; 
         }
         if (Input.GetButtonUp("Down"))
         {
-            squeeze = false; print("squeeze set to false");
+            squeeze = false; 
         }
 
     }
@@ -168,8 +170,7 @@ public class PlayerMovement : MonoBehaviour
 
         rb.velocity = velocity;
 
-        //print("current speed is" + currentSpeed);
-        //calculate time for power ups//
+ 
 
         if (crashThroughEverything == true)
         {
@@ -177,7 +178,8 @@ public class PlayerMovement : MonoBehaviour
            if(powerUpRemainingTime == 0)
            {
                 crashThroughEverything = false;
-           }
+                playerLt.enabled = false; print("playerLtdisabled");
+            }
 
 
         }
@@ -187,7 +189,20 @@ public class PlayerMovement : MonoBehaviour
             powerUpRemainingTime = Mathf.Max(powerUpDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - powerUpStartTime), 0);
             if (powerUpRemainingTime == 0)
             {
-                flyingMode = false; print("flying mode set to false");
+                flyingMode = false;
+                playerLt.enabled = false; print("playerLtdisabled");
+            }
+
+        }
+
+
+        if (freeze == true)
+        {
+            powerUpRemainingTime = Mathf.Max(powerUpDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - powerUpStartTime), 0);
+            if (powerUpRemainingTime == 0)
+            {
+                freeze = false;
+                playerLt.enabled = false; print("playerLtdisabled");
             }
 
         }
@@ -202,7 +217,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
- 
+
 
 
         //determin which animation to play
@@ -310,13 +325,19 @@ public class PlayerMovement : MonoBehaviour
         }
 
         var powerup = col.gameObject.GetComponent<PowerUp>();
+
         if (powerup != null)
         {
+            Light2D powerupLt = col.gameObject.GetComponentInChildren<Light2D>();
+
+            playerLt.color = powerupLt.color;
+
             if (col.gameObject.CompareTag("CrashThrough"))
             {
                 Destroy(col.gameObject);
                 DisableAllPowerUps();
                 crashThroughEverything = true;
+                playerLt.enabled = true; print("playerLt enabled");
                 powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
                 powerUpDuration = powerup.duration;
             }
@@ -325,7 +346,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 Destroy(col.gameObject);
                 DisableAllPowerUps();
-                flyingMode = true; print("flying mode set to true");
+                flyingMode = true;
+                playerLt.enabled = true; print("playerLt enabled");
                 powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
                 powerUpDuration = powerup.duration;
             }
@@ -334,7 +356,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 Destroy(col.gameObject);
                 DisableAllPowerUps();
-                freeze = true; print("slowdown set to true");
+                freeze = true;
+                playerLt.enabled = true; print("playerLt enabled");
                 powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
                 powerUpDuration = powerup.duration;
             }
@@ -344,12 +367,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (col.gameObject.name.Contains("cactus"))
         {
-            col.gameObject.GetComponent<Animator>().SetBool("CactusGotHit", true); print("cactus got hit");
+            col.gameObject.GetComponent<Animator>().SetBool("CactusGotHit", true); 
         }
 
         if (col.gameObject.name.Contains("spikes"))
         {
-            col.gameObject.GetComponent<Animator>().SetBool("SpikeGotHit", true); print("spike got hit");
+            col.gameObject.GetComponent<Animator>().SetBool("SpikeGotHit", true); 
         }
 
         if (col.gameObject.CompareTag("Obstacle") && crashThroughEverything == false)
@@ -404,7 +427,7 @@ public class PlayerMovement : MonoBehaviour
         crashThroughEverything = false;
         flyingMode = false;
         freeze = false;
-
+        playerLt.enabled = false;print("playerLT disabled");
     }
 
 

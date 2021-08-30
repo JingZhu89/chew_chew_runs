@@ -92,7 +92,7 @@ public class LevelGenerator : MonoBehaviour
             manholeJustSpawned = false;
 
 
-            numberOfGroundSpawned++; print("number of ground spawned =" + numberOfGroundSpawned);
+            numberOfGroundSpawned++; 
 
 
             //spawn obstable and collectable on ground parts//
