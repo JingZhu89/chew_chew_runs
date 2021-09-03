@@ -325,7 +325,7 @@ public class LevelGenerator : MonoBehaviour
     private Transform SpawnGround(Vector3 spawnPosition)
     {
         GameObject groundPart = TileObjectPool.SharedInstance.GetPooledGroundTiles(numberOfGroundTilesPulled);
-        numberOfForegroundPulled++;
+        numberOfGroundTilesPulled++;
         if(groundPart != null)
         {
             groundPart.transform.position = spawnPosition;
