@@ -5,14 +5,18 @@ using UnityEngine;
 public class LevelGenerator : MonoBehaviour
 {
 
-    private const float PLAYER_DISTANCE_SPAWN_PART = 20f;
+    private const float PLAYER_DISTANCE_SPAWN_PART = 50f;
     [SerializeField] private Transform groundPart_Start;
+    [SerializeField] private Transform foreground_Start;
     [SerializeField] private Transform groundManhole_1;
     [SerializeField] private PlayerMovement player;
     public int startingLevelParts;
     public float manholePercentage = 0.15f;
     private Vector3 groundEndPosition;
     private Vector3 floatingEndPosition;
+    private Vector3 foregroundEndPosition;
+    public float minDistanceBetweenForegrounds = 5.0f;
+    public float maxDistanceBetweenForegrounds = 10.0f;
     public int maxContinuouseGround = 20;
     public int minDistanceBetweenManholes = 2;
     private bool manholeJustSpawned = false;
@@ -24,12 +28,14 @@ public class LevelGenerator : MonoBehaviour
     public float distanceToGround_2 = 2.8f;
     public float floatingDistance1Vs2Ratio = 0.5f;
     public int maxContinuousPlatform = 5;
-    public float minDistanceBetweenPlatformSets = 5.0f;
-    public float maxDistanceBetweenPlatformSets = 10.0f;
+    public float minDistanceBetweenPlatformSets = 10.0f;
+    public float maxDistanceBetweenPlatformSets = 20.0f;
     int numberOfGroundSpawned;
     int numberOfNoObstacleSpawned;
     public int minDistanceBetweenObstacles=4;
     public float floatingTallVsFlatRatio = 0.5f;
+    int numberOfForegroundPulled = 0;
+    int numberOfGroundTilesPulled = 0;
 
 
     // spawn initial parts//
@@ -37,6 +43,7 @@ public class LevelGenerator : MonoBehaviour
     {
         groundEndPosition = groundPart_Start.Find("right").position + (groundPart_Start.Find("right").position - groundPart_Start.Find("left").position) / 2;
         floatingEndPosition = new Vector3(Random.Range(minDistanceBetweenPlatformSets, maxDistanceBetweenPlatformSets), GetFloatingPlatformHeight(), 0);
+        foregroundEndPosition = new Vector3(foreground_Start.Find("right").position.x + Random.Range(minDistanceBetweenForegrounds,maxDistanceBetweenForegrounds), foreground_Start.Find("right").position.y, 0);
 
         for (int i=0; i<startingLevelParts;i++)
         {
@@ -59,6 +66,13 @@ public class LevelGenerator : MonoBehaviour
         {
             SpawnGroundPart();
         }
+        if (Vector3.Distance(player.transform.position, foregroundEndPosition) < PLAYER_DISTANCE_SPAWN_PART)
+        {
+            SpawnForeground();
+        }
+
+
+
 
     }
 
@@ -147,6 +161,14 @@ public class LevelGenerator : MonoBehaviour
     }
 
 
+    private void SpawnForeground()
+    {
+        Transform lastForegroundTransform;
+        float xdistanceBetweenForeground = Random.Range(minDistanceBetweenForegrounds, maxDistanceBetweenForegrounds);
+        lastForegroundTransform = SpawnForeground(foregroundEndPosition);
+        foregroundEndPosition = new Vector3(lastForegroundTransform.Find("right").position.x + xdistanceBetweenForeground,lastForegroundTransform.Find("right").position.y,0);
+        
+    }
 
 
     // define spawning method for floating parts//
@@ -246,6 +268,8 @@ public class LevelGenerator : MonoBehaviour
     }
 
 
+
+
     //spawon objects on platform//
 
     private void SpawnObjectsOnPlatform(Transform lastFloatingPartTransform)
@@ -300,7 +324,8 @@ public class LevelGenerator : MonoBehaviour
 
     private Transform SpawnGround(Vector3 spawnPosition)
     {
-        GameObject groundPart = TileObjectPool.SharedInstance.GetPooledGroundTiles();
+        GameObject groundPart = TileObjectPool.SharedInstance.GetPooledGroundTiles(numberOfGroundTilesPulled);
+        numberOfForegroundPulled++;
         if(groundPart != null)
         {
             groundPart.transform.position = spawnPosition;
@@ -309,6 +334,22 @@ public class LevelGenerator : MonoBehaviour
         }
         return null;
     }
+
+
+    private Transform SpawnForeground(Vector3 spawnPosition)
+    {  
+        GameObject Foreground = TileObjectPool.SharedInstance.GetPooledForeground(numberOfForegroundPulled);
+        numberOfForegroundPulled++;
+        if (Foreground != null)
+        {
+            Foreground.transform.position = spawnPosition;
+            Foreground.SetActive(true);
+            return Foreground.transform;
+        }
+        return null;
+    }
+
+
 
     private Transform SpawnManhole(Vector3 spawnPosition)
     {
@@ -321,6 +362,9 @@ public class LevelGenerator : MonoBehaviour
         }
         return null;
     }
+
+
+
 
 
     //floating flat//

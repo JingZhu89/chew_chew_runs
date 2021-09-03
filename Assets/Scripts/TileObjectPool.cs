@@ -9,12 +9,19 @@ public class TileObjectPool : MonoBehaviour
     public List<GameObject> pooledGroundTiles_1;
     public GameObject groundTilesToPool_1;
     public int numberOfGroundTilesToPool;
-
-
     public List<GameObject> pooledGroundTiles_2;
     public GameObject groundTilesToPool_2;
 
-
+    public List<GameObject> pooledForeground_1;
+    public GameObject foregroundToPool_1;
+    public List<GameObject> pooledForeground_2;
+    public GameObject foregroundToPool_2;
+    public List<GameObject> pooledForeground_3;
+    public GameObject foregroundToPool_3;
+    public List<GameObject> pooledForeground_4;
+    public GameObject foregroundToPool_4;
+    public int numberOfForegroundToPool;
+         
     public List<GameObject> pooledWaterTiles;
     public GameObject waterTilesToPool;
     public int numberOfWaterTilesToPool;
@@ -85,6 +92,8 @@ public class TileObjectPool : MonoBehaviour
             tmpG2.SetActive(false);
             pooledGroundTiles_2.Add(tmpG2);
         }
+
+
 
 
 
@@ -180,26 +189,74 @@ public class TileObjectPool : MonoBehaviour
             tmp8.SetActive(false);
             pooledTallPlatformRightTiles.Add(tmp8);
         }
+
+        //create object pool for foreground
+
+        pooledForeground_1 = new List<GameObject>();
+        GameObject tmpF1;
+        for (int i = 0; i < numberOfForegroundToPool; i++)
+        {
+            tmpF1 = Instantiate(foregroundToPool_1);
+            tmpF1.SetActive(false);
+            pooledForeground_1.Add(tmpF1);
+        }
+
+        pooledForeground_2 = new List<GameObject>();
+        GameObject tmpF2;
+        for (int i = 0; i < numberOfForegroundToPool; i++)
+        {
+            tmpF2 = Instantiate(foregroundToPool_2);
+            tmpF2.SetActive(false);
+            pooledForeground_2.Add(tmpF2);
+        }
+
+        pooledForeground_3 = new List<GameObject>();
+        GameObject tmpF3;
+        for (int i = 0; i < numberOfForegroundToPool; i++)
+        {
+            tmpF3 = Instantiate(foregroundToPool_3);
+            tmpF3.SetActive(false);
+            pooledForeground_3.Add(tmpF3);
+        }
+
+        pooledForeground_4 = new List<GameObject>();
+        GameObject tmpF4;
+        for (int i = 0; i < numberOfForegroundToPool; i++)
+        {
+            tmpF4 = Instantiate(foregroundToPool_4);
+            tmpF4.SetActive(false);
+            pooledForeground_4.Add(tmpF4);
+        }
+
+
+
     }
 
-//get pooled objects//
+    //get pooled objects//
 
-    public GameObject GetPooledGroundTiles()
+    public GameObject GetPooledGroundTiles(int i)
     {
 
-            for (int i = 0; i < numberOfGroundTilesToPool; i++)
+
+            if (i % 2 == 0)
             {
-                if (!pooledGroundTiles_1[i].activeInHierarchy && i % 2 == 0)
+                for (int n = 0; n < numberOfGroundTilesToPool; n++)
                 {
-                    return pooledGroundTiles_1[i];
-                }
-                if (!pooledGroundTiles_2[i].activeInHierarchy && i % 2 == 1)
-                {
-                    return pooledGroundTiles_2[i];
+                    if (!pooledGroundTiles_1[n].activeInHierarchy)
+                    { return pooledGroundTiles_1[n]; }
                 }
 
-        }
-        return null;
+            }
+            if (i % 2 == 1)
+            {
+                for (int n = 0; n < numberOfGroundTilesToPool; n++)
+                {
+                    if (!pooledGroundTiles_2[n].activeInHierarchy)
+                    { return pooledGroundTiles_2[n]; }
+                }
+            }
+
+     return null;
     }
 
 
@@ -314,6 +371,50 @@ public class TileObjectPool : MonoBehaviour
         }
         return null;
     }
+
+
+    public GameObject GetPooledForeground(int i)
+    {
+
+           if (i % 4 == 0)
+            {
+                for (int n = 0; n < numberOfForegroundToPool; n++)
+                {
+                    if (!pooledForeground_2[n].activeInHierarchy)
+                    { return pooledForeground_2[n]; }
+                }
+                   
+            }
+            if (i % 4 == 1)
+            {
+                for (int n = 0; n < numberOfForegroundToPool; n++)
+                {
+                    if (!pooledForeground_3[n].activeInHierarchy)
+                    { return pooledForeground_3[n]; }
+                }
+            }
+            if (i % 4 == 2)
+            {
+                for (int n = 0; n < numberOfForegroundToPool; n++)
+                {
+                    if (!pooledForeground_4[n].activeInHierarchy)
+                    { return pooledForeground_4[n]; }
+                }
+            }
+            if (i % 4 == 3)
+            {
+                for (int n = 0; n < numberOfForegroundToPool; n++)
+                {
+                    if (!pooledForeground_1[n].activeInHierarchy)
+                    { return pooledForeground_1[n]; }
+                }
+            }
+            
+          return null;
+    }
+
+
+
 
 }
 
