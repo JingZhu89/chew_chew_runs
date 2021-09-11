@@ -21,6 +21,11 @@ public class TileObjectPool : MonoBehaviour
     public List<GameObject> pooledForeground_4;
     public GameObject foregroundToPool_4;
     public int numberOfForegroundToPool;
+
+    public List<GameObject> pooledForegroundBase;
+    public GameObject foregourndBaseToPool;
+    public int numberOfForegourndBaseToPool;
+
          
     public List<GameObject> pooledWaterTiles;
     public GameObject waterTilesToPool;
@@ -190,7 +195,7 @@ public class TileObjectPool : MonoBehaviour
             pooledTallPlatformRightTiles.Add(tmp8);
         }
 
-        //create object pool for foreground
+        //create object pool for foreground and foreground base
 
         pooledForeground_1 = new List<GameObject>();
         GameObject tmpF1;
@@ -228,6 +233,15 @@ public class TileObjectPool : MonoBehaviour
             pooledForeground_4.Add(tmpF4);
         }
 
+
+        pooledForegroundBase = new List<GameObject>();
+        GameObject tempFB;
+        for (int i = 0; i< numberOfForegourndBaseToPool; i++)
+        {
+            tempFB = Instantiate(foregourndBaseToPool);
+            tempFB.SetActive(false);
+            pooledForegroundBase.Add(tempFB);
+        }
 
 
     }
@@ -412,6 +426,19 @@ public class TileObjectPool : MonoBehaviour
             
           return null;
     }
+
+    public GameObject GetPooledForegroundBase()
+    {
+        for (int i =0;  i<numberOfForegourndBaseToPool;i++)
+        {
+            if(!pooledForegroundBase[i].activeInHierarchy)
+            {
+                return pooledForegroundBase[i];
+            }
+        }
+        return null;
+    }
+
 
 
 
