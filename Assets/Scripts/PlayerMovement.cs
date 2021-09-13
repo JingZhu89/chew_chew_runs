@@ -42,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     public int gotHitDuration;
 
     Animator animator;
+    public float playerAnimatorSpeedMultiplier;
     private string currentState;
     public float speedThreshold1;
     public float freezeSpeed;
@@ -138,6 +139,7 @@ public class PlayerMovement : MonoBehaviour
   
 
         currentSpeed = velocity.x;
+        animator.speed = currentSpeed * playerAnimatorSpeedMultiplier;
 
 
         //y velocity calculation//
