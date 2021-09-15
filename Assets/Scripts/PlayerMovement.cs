@@ -43,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
     Animator animator;
     public float playerAnimatorSpeedMultiplier;
+    public float playerScoreMultiplier;
     private string currentState;
     public float speedThreshold1;
     public float freezeSpeed;
@@ -81,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
         if (transform.position.y <= bottomOfScreen)
         {
             healthScore = 0;
-            SceneManager.LoadScene("MainMenu");
+            GameOver.SharedInstance.EndGame();
         }
 
         if (Input.GetButtonDown("Down"))
@@ -386,20 +387,40 @@ public class PlayerMovement : MonoBehaviour
             if (healthScore > 1)
 
             {
-                healthScore--; print("obstacle hit");
+                healthScore--; 
             }
 
             else
             {
                 healthScore--;
-                SceneManager.LoadScene("MainMenu");
+                GameOver.SharedInstance.EndGame();
 
             }
+
+        }
+
+    }
+    
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if ((col.collider.gameObject.name.Contains ("tall floating left") || col.collider.gameObject.name.Contains("tall floating single")) && crashThroughEverything == false)
+        {
+ 
+            gotHit = true;
+            float floatingTallPlatformDownYposition = col.collider.gameObject.transform.Find("down").position.y;
+            float floatingTallPlatformLeftXposition = col.collider.gameObject.transform.Find("left").position.x;
+            if (transform.position.x < floatingTallPlatformLeftXposition || transform.position.y < floatingTallPlatformDownYposition)
+            {
+
+                GameOver.SharedInstance.EndGame(); 
+            }
+        }
+        else
+        {
+            print("collided with " + col.collider.name);
         }
     }
-
-
-
 
     private void OnCollisionStay2D(Collision2D col)
     {

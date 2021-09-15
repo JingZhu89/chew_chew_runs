@@ -10,6 +10,7 @@ TagManager:
   - CrashThrough
   - FlyingMode
   - Freeze
+  - CollisionDetection
   layers:
   - Default
   - TransparentFX
