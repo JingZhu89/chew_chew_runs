@@ -691,7 +691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOver: {fileID: 689874069}
-  transitionTime: 2
+  transitionTime: 1
 --- !u!95 &924306016
 Animator:
   serializedVersion: 3
