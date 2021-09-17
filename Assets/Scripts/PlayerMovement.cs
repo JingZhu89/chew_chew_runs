@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     private bool freeze = false;
 
     private bool gotHit;
+    private bool gotKilled;
     public int gotHitRemainingTime { get; private set; }
     private int gotHitStartTime;
     public int gotHitDuration;
@@ -56,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        gotKilled = false;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         bottomOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)).y;
@@ -82,6 +84,7 @@ public class PlayerMovement : MonoBehaviour
         if (transform.position.y <= bottomOfScreen)
         {
             healthScore = 0;
+            gotKilled = true;
             GameOver.SharedInstance.EndGame();
         }
 
@@ -224,70 +227,75 @@ public class PlayerMovement : MonoBehaviour
 
 
         //determin which animation to play
-        if( flyingMode==false && crashThroughEverything==false && gotHit==false && currentSpeed==0.0f && isGrounded==true && squeeze ==false)
+        if( flyingMode==false && crashThroughEverything==false && gotKilled==false && currentSpeed==0.0f && isGrounded==true && squeeze ==false)
         {
             ChangePlayerAnimationState("chuchu idle");
 
         }
-        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze == false)
         {
             ChangePlayerAnimationState("chuchu run");
 
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == false)
         {
             ChangePlayerAnimationState("chuchu run fast");
         }
 
 
-        if (flyingMode == false && crashThroughEverything == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze==true)
+        if (flyingMode == false && crashThroughEverything == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze==true && gotKilled ==false)
         {
             ChangePlayerAnimationState("chuchu squeeze");
         }
 
-        if (flyingMode == false && crashThroughEverything == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == true)
+        if (flyingMode == false && crashThroughEverything == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == true && gotKilled == false)
         {
             ChangePlayerAnimationState("chuchu squeeze fast");
         }
         
 
 
-        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed <= speedThreshold1 && jumpingUp == true)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed <= speedThreshold1 && jumpingUp == true)
         {
             ChangePlayerAnimationState("chuchu jumpup");
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed < speedThreshold1 && jumpingDown == true)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed < speedThreshold1 && jumpingDown == true)
         {
             ChangePlayerAnimationState("chuchu jumpdown");
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed > speedThreshold1 && jumpingUp == true)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && jumpingUp == true)
         {
             ChangePlayerAnimationState("chuchu jumpup fast");
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotHit == false && currentSpeed > speedThreshold1 && jumpingDown == true)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && jumpingDown == true)
         {
             ChangePlayerAnimationState("chuchu jumpdown fast");
         }
         
-        if (flyingMode == false && crashThroughEverything == false && isGrounded ==true && gotHit == true )
-        {
-            ChangePlayerAnimationState("chuchu run hurt");
-        }
 
-        if (flyingMode == false && crashThroughEverything == false && jumpingUp == true && gotHit == true)
+        if (gotKilled == true)
         {
-            ChangePlayerAnimationState("chuchu jumpup hurt");
+            ChangePlayerAnimationState("chuchu die");
         }
+        //if (flyingMode == false && crashThroughEverything == false && isGrounded ==true && gotHit == true )
+        //{
+        //    ChangePlayerAnimationState("chuchu run hurt");
+        //}
+
+        //if (flyingMode == false && crashThroughEverything == false && jumpingUp == true && gotHit == true)
+        //{
+        //    ChangePlayerAnimationState("chuchu jumpup hurt");
+        //}
 
 
-        if (flyingMode == false && crashThroughEverything == false && jumpingDown == true && gotHit == true)
-        {
-            ChangePlayerAnimationState("chuchu jumpdown hurt");
-        }
+        //if (flyingMode == false && crashThroughEverything == false && jumpingDown == true && gotHit == true)
+        //{
+        //    ChangePlayerAnimationState("chuchu jumpdown hurt");
+        //}
 
         
         if (flyingMode == true && squeeze == false)
@@ -368,36 +376,36 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        if (col.gameObject.name.Contains("cactus"))
-        {
-            col.gameObject.GetComponent<Animator>().SetBool("CactusGotHit", true); 
-        }
+        //if (col.gameObject.name.Contains("cactus"))
+        //{
+        //    col.gameObject.GetComponent<Animator>().SetBool("CactusGotHit", true); 
+        //}
 
-        if (col.gameObject.name.Contains("spikes"))
-        {
-            col.gameObject.GetComponent<Animator>().SetBool("SpikeGotHit", true); 
-        }
+        //if (col.gameObject.name.Contains("spikes"))
+        //{
+        //    col.gameObject.GetComponent<Animator>().SetBool("SpikeGotHit", true); 
+        //}
 
-        if (col.gameObject.CompareTag("Obstacle") && crashThroughEverything == false)
+        //if (col.gameObject.CompareTag("Obstacle") && crashThroughEverything == false)
 
-        {
-            DisableAllPowerUps();
-            gotHit = true;
-            gotHitStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
-            if (healthScore > 1)
+        //{
+        //    DisableAllPowerUps();
+        //    gotHit = true;
+        //    gotHitStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
+        //    if (healthScore > 1)
 
-            {
-                healthScore--; 
-            }
+        //    {
+        //        healthScore--; 
+        //    }
 
-            else
-            {
-                healthScore--;
-                GameOver.SharedInstance.EndGame();
+        //    else
+        //    {
+        //        healthScore--;
+        //        GameOver.SharedInstance.EndGame();
 
-            }
+        //    }
 
-        }
+        //}
 
     }
     
@@ -407,12 +415,12 @@ public class PlayerMovement : MonoBehaviour
         if ((col.collider.gameObject.name.Contains ("tall floating left") || col.collider.gameObject.name.Contains("tall floating single")) && crashThroughEverything == false)
         {
  
-            gotHit = true;
+
             float floatingTallPlatformDownYposition = col.collider.gameObject.transform.Find("down").position.y;
             float floatingTallPlatformLeftXposition = col.collider.gameObject.transform.Find("left").position.x;
             if (transform.position.x < floatingTallPlatformLeftXposition || transform.position.y < floatingTallPlatformDownYposition)
             {
-
+                gotKilled = true;
                 GameOver.SharedInstance.EndGame(); 
             }
         }
