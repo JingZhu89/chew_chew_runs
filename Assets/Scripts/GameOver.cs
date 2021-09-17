@@ -26,7 +26,7 @@ public class GameOver : MonoBehaviour
     IEnumerator LoadLevel(int levelIndex)
     {
         gameOver.SetTrigger("GameOver");
-        yield return new WaitForSeconds(transitionTime);
+        yield return new WaitForSecondsRealtime(transitionTime);
         SceneManager.LoadScene(levelIndex);
 
     }

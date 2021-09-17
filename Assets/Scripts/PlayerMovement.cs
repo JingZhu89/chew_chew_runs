@@ -55,8 +55,10 @@ public class PlayerMovement : MonoBehaviour
         SharedInstance = this;
     }
 
+
     private void Start()
     {
+        StartCoroutine(DelayedStart());
         gotKilled = false;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -280,6 +282,7 @@ public class PlayerMovement : MonoBehaviour
         if (gotKilled == true)
         {
             ChangePlayerAnimationState("chuchu die");
+            Time.timeScale=0;
         }
         //if (flyingMode == false && crashThroughEverything == false && isGrounded ==true && gotHit == true )
         //{
@@ -474,6 +477,12 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
+    IEnumerator DelayedStart()
+    {
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(3.0f);
+        Time.timeScale = 1;
+    }
 
 
 }
