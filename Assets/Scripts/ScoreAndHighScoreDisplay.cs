@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreAndHealthDisplay : MonoBehaviour
+public class ScoreAndHighScoreDisplay : MonoBehaviour
+    
 {
     public PlayerMovement Player;
     public Text scoreText;
-    public Text healthText;
     public Text powerUpText;
+    public Text topScoreText;
+
+
     void Update()
     {
         scoreText.text = "Score : " + Player.playerScore;
-        healthText.text = "Health : " + Player.healthScore;
+        topScoreText.text = "Top Score : " + GameControl.control?.PlayerHighestScore ?? "";
         powerUpText.text = "Powerup Remaining Time : " + Player.powerUpRemainingTime;
+
     }
+
+    
+
 }

@@ -16,11 +16,10 @@ public class PlayerMovement : MonoBehaviour
     bool squeeze = false;
     Rigidbody2D rb;
 
-
     private float bottomOfScreen;
     private bool isGrounded;
     public int playerScore { get; private set; }
-    public int healthScore { get; private set; }
+
     private bool jumping = false;
     private float jumpTimeCounter; //max time you can jump//
     public float jumpTime;
@@ -59,11 +58,13 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         StartCoroutine(DelayedStart());
+        playerScore = 0;
+        powerUpRemainingTime = 0;
         gotKilled = false;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         bottomOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)).y;
-        healthScore = 100;
+
         playerLt = GetComponentInChildren<Light2D>();
         playerLt.enabled = false;print("playerLtdisabled");
     }
@@ -85,8 +86,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (transform.position.y <= bottomOfScreen)
         {
-            healthScore = 0;
+
             gotKilled = true;
+            GameControl.control.AddScore(playerScore);
+            GameControl.control.Top5Scores();
+            GameControl.control.TopScore();
             GameOver.SharedInstance.EndGame();
         }
 
@@ -424,6 +428,9 @@ public class PlayerMovement : MonoBehaviour
             if (transform.position.x < floatingTallPlatformLeftXposition || transform.position.y < floatingTallPlatformDownYposition)
             {
                 gotKilled = true;
+                GameControl.control.AddScore(playerScore);
+                GameControl.control.Top5Scores();
+                GameControl.control.TopScore();
                 GameOver.SharedInstance.EndGame(); 
             }
         }
