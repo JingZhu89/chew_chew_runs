@@ -19,7 +19,7 @@ public class GameOver : MonoBehaviour
     {
         print("endgame triggered");
 
-        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex - 1));
+        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
     }
 
 

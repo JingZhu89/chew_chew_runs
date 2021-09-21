@@ -15,7 +15,7 @@ public class ScoreAndHighScoreDisplay : MonoBehaviour
     void Update()
     {
         scoreText.text = "Score : " + Player.playerScore;
-        topScoreText.text = "Top Score : " + GameControl.control?.PlayerHighestScore ?? "";
+        topScoreText.text = "Top Score : " + GameControl.control.PlayerHighestScore;
         powerUpText.text = "Powerup Remaining Time : " + Player.powerUpRemainingTime;
 
     }

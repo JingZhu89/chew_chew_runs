@@ -86,12 +86,16 @@ public class PlayerMovement : MonoBehaviour
 
         if (transform.position.y <= bottomOfScreen)
         {
-
+            if (!gotKilled)
+            {
+                GameControl.control.AddScore(playerScore);
+                GameControl.control.GetLastScore(playerScore);
+                GameControl.control.GetTop5Scores();
+                GameControl.control.TopScore();
+                GameOver.SharedInstance.EndGame();
+            }
             gotKilled = true;
-            GameControl.control.AddScore(playerScore);
-            GameControl.control.Top5Scores();
-            GameControl.control.TopScore();
-            GameOver.SharedInstance.EndGame();
+            
         }
 
         if (Input.GetButtonDown("Down"))
@@ -427,11 +431,16 @@ public class PlayerMovement : MonoBehaviour
             float floatingTallPlatformLeftXposition = col.collider.gameObject.transform.Find("left").position.x;
             if (transform.position.x < floatingTallPlatformLeftXposition || transform.position.y < floatingTallPlatformDownYposition)
             {
+                if (!gotKilled)
+                {
+                    GameControl.control.AddScore(playerScore);
+                    GameControl.control.GetLastScore(playerScore);
+                    GameControl.control.GetTop5Scores();
+                    GameControl.control.TopScore();
+                    GameOver.SharedInstance.EndGame();
+                }
+
                 gotKilled = true;
-                GameControl.control.AddScore(playerScore);
-                GameControl.control.Top5Scores();
-                GameControl.control.TopScore();
-                GameOver.SharedInstance.EndGame(); 
             }
         }
         else

@@ -9,6 +9,7 @@ public class GameControl : MonoBehaviour
     public List<int> PlayerScoreList = new List<int>();
     public List<int> PlayerHighScoreList = new List<int>();
     public int PlayerHighestScore { get; private set; }
+    public int LastScore { get; private set; }
 
     void Awake()
     {
@@ -35,13 +36,19 @@ public class GameControl : MonoBehaviour
         }
     }
 
-    public List<int> Top5Scores()
+    public void GetTop5Scores()
     {
-        return PlayerScoreList.OrderByDescending(x => x).Take(5).ToList();
+        PlayerHighScoreList=PlayerScoreList.OrderByDescending(x => x).Take(5).ToList();
     }
 
     public int TopScore()
     {
         return PlayerHighestScore=PlayerScoreList.Max(x => x);
     }
+
+    public void GetLastScore(int score)
+    {
+        LastScore = score;
+    }
+
 }
