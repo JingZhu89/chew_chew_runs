@@ -11,12 +11,25 @@ public class ScoreAndHighScoreDisplay : MonoBehaviour
     public Text powerUpText;
     public Text topScoreText;
 
+    private void Start()
+    {
+        powerUpText.color = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+    }
 
     void Update()
     {
-        scoreText.text = "Score : " + Player.playerScore;
+        scoreText.text = "Current Score : " + Player.playerScore;
         topScoreText.text = "Top Score : " + GameControl.control.PlayerHighestScore;
-        powerUpText.text = "Powerup Remaining Time : " + Player.powerUpRemainingTime;
+        powerUpText.text = Player.powerUpRemainingTime.ToString() + " s left";
+        if (Player.freeze == true || Player.crashThroughEverything == true || Player.flyingMode == true)
+        {
+            powerUpText.color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+        else
+        {
+            powerUpText.color = new Vector4(1.0f, 1.0f, 1.0f, 0.0f);
+        }
+
 
     }
 

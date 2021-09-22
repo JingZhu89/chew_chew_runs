@@ -31,15 +31,15 @@ public class PlayerMovement : MonoBehaviour
     private int powerUpStartTime;
     private int powerUpDuration;
 
-    private bool flyingMode = false;
-    private bool crashThroughEverything = false;
-    private bool freeze = false;
+    public bool flyingMode = false;
+    public bool crashThroughEverything = false;
+    public bool freeze = false;
 
-    private bool gotHit;
+    //private bool gotHit;
     private bool gotKilled;
-    public int gotHitRemainingTime { get; private set; }
-    private int gotHitStartTime;
-    public int gotHitDuration;
+    //public int gotHitRemainingTime { get; private set; }
+    //private int gotHitStartTime;
+    //public int gotHitDuration;
 
     Animator animator;
     public float playerAnimatorSpeedMultiplier;
@@ -66,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
         bottomOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)).y;
 
         playerLt = GetComponentInChildren<Light2D>();
-        playerLt.enabled = false;print("playerLtdisabled");
+        playerLt.enabled = false;
     }
     // Update is called once per frame
     void Update()
@@ -142,10 +142,10 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.x = freezeSpeed;
         }
-        else if (gotHit == true)
-        {
-            velocity.x = 0;
-        }
+        //else if (gotHit == true)
+        //{
+        //    velocity.x = 0;
+        //}
         else
         {
             velocity.x = runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor);
@@ -223,13 +223,13 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        if (gotHit == true)
-        {
-            gotHitRemainingTime = Mathf.Max(gotHitDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - gotHitStartTime), 0);
-            if (gotHitRemainingTime == 0)
-                gotHit = false;
+        //if (gotHit == true)
+        //{
+        //    gotHitRemainingTime = Mathf.Max(gotHitDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - gotHitStartTime), 0);
+        //    if (gotHitRemainingTime == 0)
+        //        gotHit = false;
 
-        }
+        //}
 
 
 

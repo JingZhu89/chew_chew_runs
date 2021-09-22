@@ -30,23 +30,23 @@ public class ShowResult : MonoBehaviour
     {
         if (GameControl.control.LastScore == GameControl.control.PlayerHighestScore && GameControl.control.LastScore !=0)
         {
-            newRecord.color= new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+            newRecord.color= new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         }
         else if (GameControl.control.LastScore!= GameControl.control.PlayerHighestScore && GameControl.control.PlayerHighScoreList.Contains(GameControl.control.LastScore))
         {
-            newHighScore.color= new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+            newHighScore.color= new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         }
         else
         {
-            newScore.color = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+            newScore.color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
         lastScore.text = GameControl.control.LastScore.ToString();
-        top1.text = "1st: " + GetScore(0);
-        top2.text = "2nd: " + GetScore(1);
-        top3.text = "3rd: " + GetScore(2);
-        top4.text = "4th: " + GetScore(3);
-        top5.text = "5th: " + GetScore(4);
+        top1.text = GetScore(0);
+        top2.text = GetScore(1);
+        top3.text = GetScore(2);
+        top4.text = GetScore(3);
+        top5.text = GetScore(4);
 
     }
 
