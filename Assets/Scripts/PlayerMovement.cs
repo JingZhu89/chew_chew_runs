@@ -311,7 +311,7 @@ public class PlayerMovement : MonoBehaviour
         
         if (flyingMode == true && squeeze == false)
         {
-            ChangePlayerAnimationState("chuchu fly");
+            ChangePlayerAnimationState("chuchu fly 2");
         }
         if(crashThroughEverything == true && squeeze == false)
         {
