@@ -291,9 +291,10 @@ public class LevelGenerator : MonoBehaviour
     private void SpawnObjectsOnPlatform(Transform lastFloatingPartTransform)
     {
 
-
+        float obstaclesSpawnRNG = Random.Range(0.0f, 1.0f);
         float collectableSpawnRNG = Random.Range(0.0f, 1.0f);
         float powerUpSpawnRNG = Random.Range(0.0f, 1.0f);
+
 
         if (collectableSpawnRNG < collectableSpawnPercentage)
         {

@@ -11,12 +11,14 @@ public class PlayerMovement : MonoBehaviour
     public float runSpeed = 5.0f;
     public float currentSpeed;
     public float jumpVelocity = 1.0f;
+    public float flyVelocity = 0.5f;
     public float speedIncreaseFactor = 1.0f;
     bool jump = false;
     bool squeeze = false;
     Rigidbody2D rb;
 
     private float bottomOfScreen;
+    private float topOfScreen;
     private bool isGrounded;
     public int playerScore { get; private set; }
 
@@ -25,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpTime;
     private bool jumpingUp;
     private bool jumpingDown;
-       
+
 
     public int powerUpRemainingTime { get; private set; }
     private int powerUpStartTime;
@@ -35,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
     public bool crashThroughEverything = false;
     public bool freeze = false;
     public bool atePoop = false;
-    private bool rolling;
+    public bool rolling = false;
     private bool gotKilled;
     public int rollingRemainingTime { get; private set; }
     private int rollingStartTime;
@@ -64,15 +66,18 @@ public class PlayerMovement : MonoBehaviour
         gotKilled = false;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        bottomOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)).y;
+        bottomOfScreen = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0)).y;
+        topOfScreen = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 1)).y;
 
         playerLt = GetComponentInChildren<Light2D>();
         playerLt.enabled = false;
+        DisableAllPowerUps();
+        DisableAllPowerDowns();
     }
     // Update is called once per frame
     void Update()
     {
-   
+
 
         if (Input.GetButtonDown("Jump"))
         {
@@ -85,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (transform.position.y <= bottomOfScreen)
+        if (transform.position.y <= bottomOfScreen || transform.position.y>topOfScreen + 1)
         {
             if (!gotKilled)
             {
@@ -96,29 +101,30 @@ public class PlayerMovement : MonoBehaviour
                 GameOver.SharedInstance.EndGame();
             }
             gotKilled = true;
-            
+
         }
 
         if (Input.GetButtonDown("Down"))
         {
-            squeeze = true; 
+            squeeze = true;
         }
         if (Input.GetButtonUp("Down"))
         {
-            squeeze = false; 
+            squeeze = false;
         }
 
     }
 
     private void FixedUpdate()
     {
-        
+
         Vector2 velocity = rb.velocity;
 
         if (velocity.y > 0)
         {
             jumpingUp = true;
         }
+
         else
         {
             jumpingUp = false;
@@ -144,7 +150,7 @@ public class PlayerMovement : MonoBehaviour
             velocity.x = freezeSpeedmultiplier * runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor);
         }
 
-        if (rolling == true)
+        else if (rolling == true)
         {
             velocity.x = rollingSpeedmultiplier * runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor);
 
@@ -154,38 +160,44 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.x = runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor);
         }
-  
+
 
         currentSpeed = velocity.x;
         animator.speed = currentSpeed * playerAnimatorSpeedMultiplier;
 
 
         //y velocity calculation//
-            if (jump == true && isGrounded == true && flyingMode==false)
-            {
-                velocity.y = jumpVelocity;
-                jumpTimeCounter = jumpTime;
-                jumping = true;
-            }
+        if (jump == true && isGrounded == true && flyingMode == false)
+        {
+            velocity.y = jumpVelocity;
+            jumpTimeCounter = jumpTime;
+            jumping = true;
+        }
+
+        else if (jump == true && isGrounded == true && flyingMode == true)
+        {
+            velocity.y = flyVelocity;
+            jumping = true;
+        }
 
 
-            if (jump == true && flyingMode == true)
-            {
-                velocity.y = jumpVelocity;
-                jumping = false;
-            }
+        if ((jump == true || jumping==true) && flyingMode == true)
+        {
+            velocity.y = jumpVelocity;
+        }
         
-            else if (jumping == true && jumpTimeCounter > 0 && flyingMode==false)
-            {
-                velocity.y = jumpVelocity;
-                jumpTimeCounter -= Time.deltaTime;
-            }
+        else if (jumping == true && jumpTimeCounter > 0 && flyingMode==false)
+        {
+            velocity.y = jumpVelocity;
+            jumpTimeCounter -= Time.deltaTime;
+        }
 
-            else
-            {
-                jumping = false;
-            }
-            jump = false;
+        else
+        {
+            jumping = false;
+        }
+
+        jump = false;
 
 
         rb.velocity = velocity;
@@ -263,7 +275,7 @@ public class PlayerMovement : MonoBehaviour
             ChangePlayerAnimationState("chuchu squeeze");
         }
 
-        if ((flyingMode == false && crashThroughEverything == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == true && gotKilled == false && rolling == false) || (rolling==true && squeeze==true))
+        if ((flyingMode == false && crashThroughEverything == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == true && gotKilled == false && rolling == false) || (rolling==true && squeeze==true && isGrounded==true && gotKilled==false))
         {
             ChangePlayerAnimationState("chuchu squeeze fast");
         }
@@ -323,19 +335,19 @@ public class PlayerMovement : MonoBehaviour
             ChangePlayerAnimationState("chuchu fly 2");
         }
 
-        if (flyingMode == true && squeeze == true && gotKilled == false)
+        if (flyingMode == true && squeeze == true && isGrounded==true && gotKilled == false)
         {
             ChangePlayerAnimationState("chuchu squeeze excited fly");
         }
 
 
-        if (crashThroughEverything == true && squeeze == false && gotKilled == false)
+        if (crashThroughEverything == true && squeeze == false && isGrounded==true && gotKilled == false)
         {
             ChangePlayerAnimationState("chuchu run armored");
         }
 
 
-        if (crashThroughEverything == true && squeeze == true && gotKilled == false)
+        if (crashThroughEverything == true && squeeze == true && isGrounded==true && gotKilled == false)
         {
             ChangePlayerAnimationState("chuchu squeeze armored");
         }
@@ -372,6 +384,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (powerup != null)
         {
+            DisableAllPowerDowns();
             Light2D powerupLt = col.gameObject.GetComponentInChildren<Light2D>();
 
             playerLt.color = powerupLt.color;
@@ -437,9 +450,8 @@ public class PlayerMovement : MonoBehaviour
         {
  
 
-            float floatingTallPlatformDownYposition = col.collider.gameObject.transform.Find("down").position.y;
             float floatingTallPlatformLeftXposition = col.collider.gameObject.transform.Find("left").position.x;
-            if (transform.position.x < floatingTallPlatformLeftXposition || transform.position.y < floatingTallPlatformDownYposition)
+            if (transform.Find("right").position.x < floatingTallPlatformLeftXposition)
             {
                 if (!gotKilled)
                 {
@@ -453,9 +465,24 @@ public class PlayerMovement : MonoBehaviour
                 gotKilled = true;
             }
         }
-        else
+        else if (col.collider.gameObject.name.Contains("tall floating") && crashThroughEverything == false)
         {
-            print("collided with " + col.collider.name);
+
+            float floatingTallPlatformDownYposition = col.collider.gameObject.transform.Find("down").position.y;
+            if ( transform.position.y < floatingTallPlatformDownYposition)
+            {
+                if (!gotKilled)
+                {
+                    GameControl.control.AddScore(playerScore);
+                    GameControl.control.GetLastScore(playerScore);
+                    GameControl.control.GetTop5Scores();
+                    GameControl.control.TopScore();
+                    GameOver.SharedInstance.EndGame();
+                }
+
+                gotKilled = true;
+            }
+
         }
     }
 
@@ -488,6 +515,14 @@ public class PlayerMovement : MonoBehaviour
         flyingMode = false;
         freeze = false;
         playerLt.enabled = false;print("playerLT disabled");
+    }
+
+    private void DisableAllPowerDowns()
+    {
+
+        atePoop = false;
+        rolling = false;
+
     }
 
 
