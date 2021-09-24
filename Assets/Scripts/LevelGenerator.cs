@@ -291,18 +291,11 @@ public class LevelGenerator : MonoBehaviour
     private void SpawnObjectsOnPlatform(Transform lastFloatingPartTransform)
     {
 
-        float obstaclesSpawnRNG = Random.Range(0.0f, 1.0f);
+
         float collectableSpawnRNG = Random.Range(0.0f, 1.0f);
         float powerUpSpawnRNG = Random.Range(0.0f, 1.0f);
 
-        if (obstaclesSpawnRNG < obstacleSpawnPercentage)
-        {
-            Transform obstacleTransform = SpawnObstacle(lastFloatingPartTransform.Find("up").position);
-            var obstacleDownPosition = obstacleTransform.Find("down").localPosition;
-            obstacleTransform.position -= Vector3.Scale(obstacleDownPosition, obstacleTransform.localScale);
-        }
-
-        else if (collectableSpawnRNG < collectableSpawnPercentage)
+        if (collectableSpawnRNG < collectableSpawnPercentage)
         {
             Transform collectableTrasnform = SpawnCollectable(lastFloatingPartTransform.Find("up").position);
             var collectableDownPosition = collectableTrasnform.Find("down").localPosition;

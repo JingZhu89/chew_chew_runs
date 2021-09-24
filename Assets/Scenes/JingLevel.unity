@@ -433,9 +433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstacles:
-  - obstacleObject: {fileID: 3295620262537670310, guid: 8568c36203358024fbccdc9f11d579ce, type: 3}
-    probability: 1
-  - obstacleObject: {fileID: 1931993945283182383, guid: 3f418ada61fa4d74384af8d2485104fb, type: 3}
+  - obstacleObject: {fileID: 1631224437361818079, guid: b9c25b5593a1a344fb35ebfe5b5ec126, type: 3}
     probability: 1
 --- !u!4 &568795309
 Transform:
@@ -1455,7 +1453,7 @@ MonoBehaviour:
   maxDistanceBetweenForegrounds: 30
   maxContinuouseGround: 10
   minDistanceBetweenManholes: 2
-  obstacleSpawnPercentage: 0
+  obstacleSpawnPercentage: 0.5
   collectableSpawnPercentage: 0.15
   powerUpSpawnPercentage: 0.05
   distanceToGround_1: 0
@@ -2430,6 +2428,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
+      propertyPath: rollingDuration
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
+      propertyPath: freezeSpeedmultiplier
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
+      propertyPath: rollingSpeedmultiplier
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
       propertyPath: playerAnimatorSpeedMultiplier
       value: 0.1
       objectReference: {fileID: 0}
@@ -2443,7 +2453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6673224115942202462, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.38
+      value: -1.42
       objectReference: {fileID: 0}
     - target: {fileID: 6673224115942202462, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
       propertyPath: m_LocalPosition.z
