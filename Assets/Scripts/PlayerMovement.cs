@@ -448,10 +448,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if ((col.collider.gameObject.name.Contains ("tall floating left") || col.collider.gameObject.name.Contains("tall floating single")) && crashThroughEverything == false)
         {
- 
 
+
+            float floatingTallPlatformSpikeUpYposition = col.collider.gameObject.transform.Find("spikeup").position.y;
             float floatingTallPlatformLeftXposition = col.collider.gameObject.transform.Find("left").position.x;
-            if (transform.Find("right").position.x < floatingTallPlatformLeftXposition)
+            if (transform.Find("right").position.x < floatingTallPlatformLeftXposition && transform.Find("down").position.y< floatingTallPlatformSpikeUpYposition)
             {
                 if (!gotKilled)
                 {

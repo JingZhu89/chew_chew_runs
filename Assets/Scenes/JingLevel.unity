@@ -274,6 +274,8 @@ MonoBehaviour:
   collectables:
   - collectableObject: {fileID: 3433744948286911320, guid: fd38e76375ca17440984626f1e50b875, type: 3}
     probability: 1
+  - collectableObject: {fileID: 6480349890970998448, guid: 8915c8f29bbbf814fb8c9c975677c911, type: 3}
+    probability: 1
 --- !u!4 &374988649
 Transform:
   m_ObjectHideFlags: 0
@@ -1361,7 +1363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac96e3731661bd149906161151594400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seasonLength: 5
+  seasonLength: 20
 --- !u!4 &1760331331
 Transform:
   m_ObjectHideFlags: 0
@@ -1908,6 +1910,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 828661688755874089, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f787472a7895dbb4a8582dfb949daf8c, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
 --- !u!1001 &2672902008013882739
