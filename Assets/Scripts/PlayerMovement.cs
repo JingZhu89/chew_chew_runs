@@ -42,6 +42,9 @@ public class PlayerMovement : MonoBehaviour
     public int rollingRemainingTime { get; private set; }
     private int rollingStartTime;
     public int rollingDuration;
+    public int atePoopRemainingTime { get; private set; }
+    private int atePoopStartTime;
+    public int atePoopDuration;
 
     Animator animator;
     public float playerAnimatorSpeedMultiplier;
@@ -72,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
         playerLt = GetComponentInChildren<Light2D>();
         playerLt.enabled = false;
         DisableAllPowerUps();
-        DisableAllPowerDowns();
+
     }
     // Update is called once per frame
     void Update()
@@ -90,7 +93,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (transform.position.y <= bottomOfScreen || transform.position.y>topOfScreen + 1)
+        if (transform.position.y <= bottomOfScreen || transform.position.y>topOfScreen + 3)
         {
             if (!gotKilled)
             {
@@ -247,57 +250,66 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
+        if (atePoop == true)
+        {
+            atePoopRemainingTime = Mathf.Max(rollingDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - atePoopStartTime), 0);
+            if (atePoopRemainingTime == 0)
+                atePoop = false;
+
+        }
+
+
 
 
 
 
 
         //determin which animation to play
-        if ( flyingMode==false && crashThroughEverything==false && gotKilled==false && currentSpeed==0.0f && isGrounded==true && squeeze ==false && rolling == false)
+        if ( flyingMode==false && crashThroughEverything==false && gotKilled==false && currentSpeed==0.0f && isGrounded==true && squeeze ==false && rolling == false && atePoop==false)
         {
             ChangePlayerAnimationState("chuchu idle");
 
         }
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze == false && rolling==false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze == false && rolling== false && atePoop == false)
         {
             ChangePlayerAnimationState("chuchu run");
 
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == false && rolling == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == false && rolling == false && atePoop == false)
         {
             ChangePlayerAnimationState("chuchu run fast");
         }
 
 
-        if (flyingMode == false && crashThroughEverything == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze==true && gotKilled ==false && rolling == false)
+        if (flyingMode == false && crashThroughEverything == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze==true && gotKilled ==false && rolling == false && atePoop == false)
         {
             ChangePlayerAnimationState("chuchu squeeze");
         }
 
-        if ((flyingMode == false && crashThroughEverything == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == true && gotKilled == false && rolling == false) || (rolling==true && squeeze==true && isGrounded==true && gotKilled==false))
+        if ((flyingMode == false && crashThroughEverything == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == true && gotKilled == false && rolling == false && atePoop == false) || (rolling==true && squeeze==true && isGrounded==true && gotKilled==false))
         {
             ChangePlayerAnimationState("chuchu squeeze fast");
         }
         
 
 
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed <= speedThreshold1 && jumpingUp == true && rolling == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed <= speedThreshold1 && jumpingUp == true && rolling == false && atePoop == false)
         {
             ChangePlayerAnimationState("chuchu jumpup");
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed < speedThreshold1 && jumpingDown == true && rolling == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed < speedThreshold1 && jumpingDown == true && rolling == false && atePoop == false)
         {
             ChangePlayerAnimationState("chuchu jumpdown");
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && jumpingUp == true && rolling == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && jumpingUp == true && rolling == false && atePoop == false)
         {
             ChangePlayerAnimationState("chuchu jumpup fast");
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && jumpingDown == true && rolling == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && jumpingDown == true && rolling == false && atePoop == false)
         {
             ChangePlayerAnimationState("chuchu jumpdown fast");
         }
@@ -341,11 +353,30 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
+        if(atePoop==true && squeeze==false && isGrounded==true && gotKilled == false)
+        {
+            ChangePlayerAnimationState("chuchu run hurt");
+        }
+
+        if (atePoop == true && jumpingUp == true && gotKilled == false)
+        {
+            ChangePlayerAnimationState("chuchu jumpup hurt");
+        }
+        
+        if (atePoop == true && jumpingDown == true && gotKilled == false)
+        {
+            ChangePlayerAnimationState("chuchu jumpdown hurt");
+        }
+
+        if (atePoop == true && squeeze == true && isGrounded==true && gotKilled == false)
+        {
+            ChangePlayerAnimationState("chuchu squeeze hurt");
+        }
+
         if (crashThroughEverything == true && squeeze == false && isGrounded==true && gotKilled == false)
         {
             ChangePlayerAnimationState("chuchu run armored");
         }
-
 
         if (crashThroughEverything == true && squeeze == true && isGrounded==true && gotKilled == false)
         {
@@ -376,7 +407,14 @@ public class PlayerMovement : MonoBehaviour
             if (col.gameObject.CompareTag("Collectable"))
             {
                 Destroy(col.gameObject);
-                playerScore=playerScore+collectable.points;
+                playerScore=Mathf.Max(playerScore+collectable.points,0);
+                if (col.gameObject.name.Contains("poop"))
+                {
+                    DisableAllPowerUps();
+                    atePoop = true;
+                    atePoopStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
+                }
+
             }
         }
 
@@ -384,7 +422,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (powerup != null)
         {
-            DisableAllPowerDowns();
             Light2D powerupLt = col.gameObject.GetComponentInChildren<Light2D>();
 
             playerLt.color = powerupLt.color;
@@ -515,16 +552,11 @@ public class PlayerMovement : MonoBehaviour
         crashThroughEverything = false;
         flyingMode = false;
         freeze = false;
+        atePoop = false;
+        rolling = false;
         playerLt.enabled = false;print("playerLT disabled");
     }
 
-    private void DisableAllPowerDowns()
-    {
-
-        atePoop = false;
-        rolling = false;
-
-    }
 
 
     private void ChangePlayerAnimationState(string newState)
