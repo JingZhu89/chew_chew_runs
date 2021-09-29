@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private float topOfScreen;
     private bool isGrounded;
     public int playerScore { get; private set; }
-
+    public int pointsJustEarnedNew { get; private set; }
     private bool jumping = false;
     private float jumpTimeCounter; //max time you can jump//
     public float jumpTime;
@@ -407,6 +407,7 @@ public class PlayerMovement : MonoBehaviour
             if (col.gameObject.CompareTag("Collectable"))
             {
                 Destroy(col.gameObject);
+                pointsJustEarnedNew = collectable.points;
                 playerScore=Mathf.Max(playerScore+collectable.points,0);
                 if (col.gameObject.name.Contains("poop"))
                 {
