@@ -42,11 +42,11 @@ public class ShowResult : MonoBehaviour
         }
 
         lastScore.text = GameControl.control.LastScore.ToString();
-        top1.text = GetScore(0);
-        top2.text = GetScore(1);
-        top3.text = GetScore(2);
-        top4.text = GetScore(3);
-        top5.text = GetScore(4);
+        top1.text = GameControl.control.PlayerHighScoreList[0].ToString();
+        top2.text = GameControl.control.PlayerHighScoreList[1].ToString();
+        top3.text = GameControl.control.PlayerHighScoreList[2].ToString();
+        top4.text = GameControl.control.PlayerHighScoreList[3].ToString();
+        top5.text = GameControl.control.PlayerHighScoreList[4].ToString();
 
     }
 
@@ -55,15 +55,5 @@ public class ShowResult : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    private string GetScore(int scoreNum)
-    {
-        if (GameControl.control.PlayerHighScoreList.Count > scoreNum)
-        {
-            return GameControl.control.PlayerHighScoreList[scoreNum].ToString();
-        }
-        else
-        {
-            return "";
-        }
-    }
+
 }

@@ -8,7 +8,7 @@ public class GameControl : MonoBehaviour
     public static GameControl control;
     public List<int> PlayerScoreList = new List<int>();
     public List<int> PlayerHighScoreList = new List<int>();
-    public int PlayerHighestScore { get; private set; }
+    public int PlayerHighestScore;
     public int LastScore { get; private set; }
 
     void Awake()
@@ -29,11 +29,9 @@ public class GameControl : MonoBehaviour
 
     public void AddScore(int score)
     {
+        PlayerScoreList = new List<int>(PlayerHighScoreList);
         PlayerScoreList.Add(score);
-        if (PlayerScoreList.Count >= 20)
-        {
-            PlayerScoreList = PlayerScoreList.OrderByDescending(x => x).Take(10).ToList();
-        }
+  
     }
 
     public void GetTop5Scores()
