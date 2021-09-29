@@ -71,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         bottomOfScreen = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0)).y;
         topOfScreen = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 1)).y;
-
+        pointsJustEarnedNew = 0;
         playerLt = GetComponentInChildren<Light2D>();
         playerLt.enabled = false;
         DisableAllPowerUps();
