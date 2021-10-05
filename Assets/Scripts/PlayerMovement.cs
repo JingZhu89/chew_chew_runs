@@ -75,7 +75,8 @@ public class PlayerMovement : MonoBehaviour
         playerLt = GetComponentInChildren<Light2D>();
         playerLt.enabled = false;
         DisableAllPowerUps();
-        FindObjectOfType<AudioManager>().PlaySound("ChuChuRunSound");
+        FindObjectOfType<AudioManager>().PlaySound("LevelThemeSound");
+
 
     }
     // Update is called once per frame
@@ -86,6 +87,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             jump = true;
+            FindObjectOfType<AudioManager>().PlaySound("ChuChuJumpSound");
         }
 
         if (Input.GetButtonUp("Jump"))
@@ -396,6 +398,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+
     }
 
 
@@ -408,14 +411,18 @@ public class PlayerMovement : MonoBehaviour
             if (col.gameObject.CompareTag("Collectable"))
             {
                 Destroy(col.gameObject);
+
                 pointsJustEarnedNew = collectable.points;
                 playerScore=Mathf.Max(playerScore+collectable.points,0);
                 if (col.gameObject.name.Contains("poop"))
                 {
+                    FindObjectOfType<AudioManager>().PlaySound("ChuChuEatPoopSound");
                     DisableAllPowerUps();
                     atePoop = true;
                     atePoopStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
                 }
+                else
+                { FindObjectOfType<AudioManager>().PlaySound("ChuChuEatSound"); }
 
             }
         }
@@ -425,6 +432,7 @@ public class PlayerMovement : MonoBehaviour
         if (powerup != null)
         {
             Light2D powerupLt = col.gameObject.GetComponentInChildren<Light2D>();
+            FindObjectOfType<AudioManager>().PlaySound("ChuChuPowerUpSound");
 
             playerLt.color = powerupLt.color;
 

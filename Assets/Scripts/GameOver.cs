@@ -18,6 +18,7 @@ public class GameOver : MonoBehaviour
     public void EndGame()
     {
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
+        FindObjectOfType<AudioManager>().StopSound("LevelThemeSound");
     }
 
 
