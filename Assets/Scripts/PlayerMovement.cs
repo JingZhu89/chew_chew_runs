@@ -75,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
         playerLt = GetComponentInChildren<Light2D>();
         playerLt.enabled = false;
         DisableAllPowerUps();
+        FindObjectOfType<AudioManager>().PlaySound("ChuChuRunSound");
 
     }
     // Update is called once per frame
