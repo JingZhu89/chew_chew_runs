@@ -228,7 +228,7 @@ public class PlayerMovement : MonoBehaviour
             if (powerUpRemainingTime == 0)
             {
                 flyingMode = false;
-                playerLt.enabled = false; print("playerLtdisabled");
+                playerLt.enabled = false; 
             }
 
         }
@@ -240,7 +240,7 @@ public class PlayerMovement : MonoBehaviour
             if (powerUpRemainingTime == 0)
             {
                 freeze = false;
-                playerLt.enabled = false; print("playerLtdisabled");
+                playerLt.enabled = false;
             }
 
         }
@@ -449,6 +449,7 @@ public class PlayerMovement : MonoBehaviour
             if (col.gameObject.CompareTag("FlyingMode"))
             {
                 Destroy(col.gameObject);
+                FindObjectOfType<AudioManager>().StopSound("Propeller");
                 DisableAllPowerUps();
                 flyingMode = true;
                 playerLt.enabled = true; 

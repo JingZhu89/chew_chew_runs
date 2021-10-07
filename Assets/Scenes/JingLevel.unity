@@ -275,7 +275,7 @@ MonoBehaviour:
   - collectableObject: {fileID: 3433744948286911320, guid: fd38e76375ca17440984626f1e50b875, type: 3}
     probability: 1
   - collectableObject: {fileID: 6480349890970998448, guid: 8915c8f29bbbf814fb8c9c975677c911, type: 3}
-    probability: 1
+    probability: 5
   - collectableObject: {fileID: 3202551315815494180, guid: 8c8f6b80a318e7645a5a58b653049baf, type: 3}
     probability: 1
 --- !u!4 &374988649
@@ -1394,7 +1394,7 @@ MonoBehaviour:
   maxDistanceBetweenForegrounds: 30
   maxContinuouseGround: 10
   minDistanceBetweenManholes: 2
-  obstacleSpawnPercentage: 0.5
+  obstacleSpawnPercentage: 0.1
   collectableSpawnPercentage: 0.15
   powerUpSpawnPercentage: 0.05
   distanceToGround_1: 0
@@ -1496,6 +1496,7 @@ GameObject:
   - component: {fileID: 2043229997}
   - component: {fileID: 2043229996}
   - component: {fileID: 2043229995}
+  - component: {fileID: 2043229998}
   m_Layer: 0
   m_Name: 1
   m_TagString: Untagged
@@ -1588,6 +1589,18 @@ Transform:
   m_Father: {fileID: 2119777807}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2043229998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043229994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cbbd04e78bfe42498981b31f2c434ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2119777803
 GameObject:
   m_ObjectHideFlags: 0

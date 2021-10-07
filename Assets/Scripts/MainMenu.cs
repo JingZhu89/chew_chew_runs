@@ -35,11 +35,13 @@ public class MainMenu : MonoBehaviour
 
     public void PlayGame()
     {
+        FindObjectOfType<AudioManager>().PlaySound("ClickSound");
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
     }
 
     public void ScoreList()
     {
+        FindObjectOfType<AudioManager>().PlaySound("ClickSound");
         SceneManager.LoadScene("ShowResults");
     }
 
@@ -53,7 +55,7 @@ public class MainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-
+        FindObjectOfType<AudioManager>().PlaySound("ClickSound");
         XMLManager.instance.SaveScores(GameControl.control.PlayerHighScoreList);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

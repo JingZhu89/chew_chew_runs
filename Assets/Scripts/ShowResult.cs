@@ -15,7 +15,7 @@ public class ShowResult : MonoBehaviour
     public Text top3;
     public Text top4;
     public Text top5;
-
+    private bool newRecordPlayed = false;
 
     private void Start()
     {
@@ -31,6 +31,11 @@ public class ShowResult : MonoBehaviour
         if (GameControl.control.LastScore == GameControl.control.PlayerHighestScore && GameControl.control.LastScore !=0)
         {
             newRecord.color= new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+            if (newRecordPlayed == false)
+            {
+               FindObjectOfType<AudioManager>().PlaySound("NewRecord");
+               newRecordPlayed = true;
+            }
         }
         else if (GameControl.control.LastScore!= GameControl.control.PlayerHighestScore && GameControl.control.PlayerHighScoreList.Contains(GameControl.control.LastScore))
         {
@@ -52,6 +57,7 @@ public class ShowResult : MonoBehaviour
 
     public void BackToMainMenu()
     {
+        FindObjectOfType<AudioManager>().PlaySound("ClickSound");
         SceneManager.LoadScene("MainMenu");
     }
 
