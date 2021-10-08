@@ -224,10 +224,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (flyingMode == true)
         {
+            FindObjectOfType<AudioManager>().PlaySound("Propeller");
             powerUpRemainingTime = Mathf.Max(powerUpDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - powerUpStartTime), 0);
             if (powerUpRemainingTime == 0)
             {
                 flyingMode = false;
+                FindObjectOfType<AudioManager>().StopSound("Propeller");
                 playerLt.enabled = false; 
             }
 
@@ -449,7 +451,6 @@ public class PlayerMovement : MonoBehaviour
             if (col.gameObject.CompareTag("FlyingMode"))
             {
                 Destroy(col.gameObject);
-                FindObjectOfType<AudioManager>().StopSound("Propeller");
                 DisableAllPowerUps();
                 flyingMode = true;
                 playerLt.enabled = true; 
@@ -565,7 +566,8 @@ public class PlayerMovement : MonoBehaviour
         freeze = false;
         atePoop = false;
         rolling = false;
-        playerLt.enabled = false;print("playerLT disabled");
+        playerLt.enabled = false;
+
     }
 
 
