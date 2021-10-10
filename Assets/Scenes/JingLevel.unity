@@ -162,6 +162,9 @@ MonoBehaviour:
   - powerUpObject: {fileID: -8465488617302086703, guid: 6fdf1d1ada790584792a32ad34f0da43, type: 3}
     probability: 1
     onlySpawnWhenPlayerIsFast: 1
+  - powerUpObject: {fileID: -7736772461528384523, guid: 82168b9f31ba8e340a9443c9bdf2d4ce, type: 3}
+    probability: 1
+    onlySpawnWhenPlayerIsFast: 1
 --- !u!4 &110628505
 Transform:
   m_ObjectHideFlags: 0
