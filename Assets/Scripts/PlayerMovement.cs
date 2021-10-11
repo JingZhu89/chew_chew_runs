@@ -38,6 +38,9 @@ public class PlayerMovement : MonoBehaviour
     public bool freeze = false;
     public bool atePoop = false;
     public bool rolling = false;
+    public bool rocketMode = false;
+    public float rocketYUp = 5f;
+    public float rocketYDown = 4f;
     private bool gotKilled;
     public int rollingRemainingTime { get; private set; }
     private int rollingStartTime;
@@ -51,9 +54,11 @@ public class PlayerMovement : MonoBehaviour
     public float playerScoreMultiplier;
     private string currentState;
     public float speedThreshold1;
+    public float maxSpeed;
     public float freezeSpeedmultiplier;
     public float rollingSpeedmultiplier;
     private Light2D playerLt;
+    private Collider2D playerCollider;
 
     private void Awake()
     {
@@ -69,6 +74,8 @@ public class PlayerMovement : MonoBehaviour
         gotKilled = false;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        playerCollider = GetComponent<Collider2D>();
+        playerCollider.enabled = true;
         bottomOfScreen = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0)).y;
         topOfScreen = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 1)).y;
         pointsJustEarnedNew = 0;
@@ -83,23 +90,34 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
 
-
-        if (Input.GetButtonDown("Jump"))
+        //jump input and condition
+        if (Input.GetButtonDown("Jump") && rocketMode==false)
         {
             jump = true;
             FindObjectOfType<AudioManager>().PlaySound("ChuChuJumpSound");
         }
 
-        if (Input.GetButtonUp("Jump"))
+        if (Input.GetButtonUp("Jump") && rocketMode==false)
         {
             jumping = false;
         }
 
+        //squeeze input and condition
 
-        if (transform.position.y <= bottomOfScreen || transform.position.y>topOfScreen + 3)
+        if (Input.GetButtonDown("Down") && rocketMode==false)
+        {
+            squeeze = true;
+        }
+        if (Input.GetButtonUp("Down") && rocketMode==false)
+        {
+            squeeze = false;
+        }
+
+        if (transform.position.y <= bottomOfScreen || transform.position.y > topOfScreen + 3)
         {
             if (!gotKilled)
             {
+                DisableAllPowerUps();
                 GameControl.control.AddScore(playerScore);
                 GameControl.control.GetLastScore(playerScore);
                 GameControl.control.GetTop5Scores();
@@ -108,15 +126,6 @@ public class PlayerMovement : MonoBehaviour
             }
             gotKilled = true;
 
-        }
-
-        if (Input.GetButtonDown("Down"))
-        {
-            squeeze = true;
-        }
-        if (Input.GetButtonUp("Down"))
-        {
-            squeeze = false;
         }
 
     }
@@ -153,18 +162,22 @@ public class PlayerMovement : MonoBehaviour
         //x velocity calculation//
         if (freeze == true)
         {
-            velocity.x = freezeSpeedmultiplier * runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor);
+            velocity.x = freezeSpeedmultiplier * Mathf.Min(runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor),maxSpeed);
         }
 
         else if (rolling == true)
         {
-            velocity.x = rollingSpeedmultiplier * runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor);
+            velocity.x = rollingSpeedmultiplier * Mathf.Min(runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor),maxSpeed);
 
+        }
+        else if (rocketMode==true)
+        {
+            velocity.x = maxSpeed;
         }
 
         else
         {
-            velocity.x = runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor);
+            velocity.x = Mathf.Min(runSpeed * (1 + Time.timeSinceLevelLoad * speedIncreaseFactor), maxSpeed);
         }
 
 
@@ -229,10 +242,13 @@ public class PlayerMovement : MonoBehaviour
             if (powerUpRemainingTime == 0)
             {
                 flyingMode = false;
-                FindObjectOfType<AudioManager>().StopSound("Propeller");
+
                 playerLt.enabled = false; 
             }
-
+        }
+        else
+        {
+            FindObjectOfType<AudioManager>().StopSound("Propeller");
         }
 
 
@@ -247,12 +263,37 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
+        if (rocketMode == true)
+        {
+            FindObjectOfType<AudioManager>().PlaySound("ChuChuRocketSound");
+            powerUpRemainingTime = Mathf.Max(powerUpDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - powerUpStartTime), 0);
+            transform.position = new Vector3(transform.position.x, Random.Range(rocketYDown, rocketYUp), transform.position.z);
+ 
+            if (powerUpRemainingTime == 0)
+            {
+                rocketMode = false;
+                playerCollider.enabled = true;
+                rb.gravityScale = 6;
+                playerLt.enabled = false;
+
+            }
+
+        }
+        else
+        {
+            FindObjectOfType<AudioManager>().StopSound("ChuChuRocketSound");
+        }
+
         if (rolling == true)
         {
+            FindObjectOfType<AudioManager>().PlaySound("ChuChuRollSound");
             rollingRemainingTime = Mathf.Max(rollingDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - rollingStartTime), 0);
             if (rollingRemainingTime == 0)
                 rolling = false;
-
+        }
+        else
+        {
+            FindObjectOfType<AudioManager>().StopSound("ChuChuRollSound");
         }
 
         if (atePoop == true)
@@ -268,53 +309,50 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-
         //determin which animation to play
-        if ( flyingMode==false && crashThroughEverything==false && gotKilled==false && currentSpeed==0.0f && isGrounded==true && squeeze ==false && rolling == false && atePoop==false)
+        if ( flyingMode==false && crashThroughEverything==false && gotKilled==false && currentSpeed==0.0f && isGrounded==true && squeeze ==false && rolling == false && atePoop==false && rocketMode==false)
         {
             ChangePlayerAnimationState("chuchu idle");
 
         }
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze == false && rolling== false && atePoop == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze == false && rolling== false && atePoop == false && rocketMode == false)
         {
             ChangePlayerAnimationState("chuchu run");
 
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == false && rolling == false && atePoop == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == false && rolling == false && atePoop == false && rocketMode == false)
         {
             ChangePlayerAnimationState("chuchu run fast");
         }
 
 
-        if (flyingMode == false && crashThroughEverything == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze==true && gotKilled ==false && rolling == false && atePoop == false)
+        if (flyingMode == false && crashThroughEverything == false && currentSpeed <= speedThreshold1 && isGrounded == true && squeeze==true && gotKilled ==false && rolling == false && atePoop == false && rocketMode == false)
         {
             ChangePlayerAnimationState("chuchu squeeze");
         }
 
-        if ((flyingMode == false && crashThroughEverything == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == true && gotKilled == false && rolling == false && atePoop == false) || (rolling==true && squeeze==true && isGrounded==true && gotKilled==false))
+        if ((flyingMode == false && crashThroughEverything == false && currentSpeed > speedThreshold1 && isGrounded == true && squeeze == true && gotKilled == false && rolling == false && atePoop == false && rocketMode == false) || (rolling==true && squeeze==true && isGrounded==true && gotKilled==false))
         {
             ChangePlayerAnimationState("chuchu squeeze fast");
         }
-        
 
-
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed <= speedThreshold1 && jumpingUp == true && rolling == false && atePoop == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed <= speedThreshold1 && jumpingUp == true && rolling == false && atePoop == false && rocketMode == false)
         {
             ChangePlayerAnimationState("chuchu jumpup");
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed < speedThreshold1 && jumpingDown == true && rolling == false && atePoop == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed < speedThreshold1 && jumpingDown == true && rolling == false && atePoop == false && rocketMode == false)
         {
             ChangePlayerAnimationState("chuchu jumpdown");
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && jumpingUp == true && rolling == false && atePoop == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && jumpingUp == true && rolling == false && atePoop == false && rocketMode == false)
         {
             ChangePlayerAnimationState("chuchu jumpup fast");
         }
 
-        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && jumpingDown == true && rolling == false && atePoop == false)
+        if (flyingMode == false && crashThroughEverything == false && gotKilled == false && currentSpeed > speedThreshold1 && jumpingDown == true && rolling == false && atePoop == false && rocketMode == false)
         {
             ChangePlayerAnimationState("chuchu jumpdown fast");
         }
@@ -325,22 +363,6 @@ public class PlayerMovement : MonoBehaviour
             ChangePlayerAnimationState("chuchu die");
             Time.timeScale=0;
         }
-
-        //if (flyingMode == false && crashThroughEverything == false && isGrounded ==true && atePoop == true )
-        //{
-        //    ChangePlayerAnimationState("chuchu run hurt");
-        //}
-
-        //if (flyingMode == false && crashThroughEverything == false && jumpingUp == true && atePoop == true)
-        //{
-        //    ChangePlayerAnimationState("chuchu jumpup hurt");
-        //}
-
-
-        //if (flyingMode == false && crashThroughEverything == false && jumpingDown == true && atePoop == true)
-        //{
-        //    ChangePlayerAnimationState("chuchu jumpdown hurt");
-        //}
 
         if(rolling==true && squeeze == false && gotKilled == false)
         {
@@ -398,6 +420,10 @@ public class PlayerMovement : MonoBehaviour
             ChangePlayerAnimationState("chuchu jumpdown armored");
         }
 
+        if (rocketMode == true)
+        {
+            ChangePlayerAnimationState("chuchu rocket");
+        }
 
 
 
@@ -468,18 +494,21 @@ public class PlayerMovement : MonoBehaviour
                 powerUpDuration = powerup.duration;
             }
 
+            if (col.gameObject.CompareTag("Rocket"))
+            {
+                Destroy(col.gameObject);
+                DisableAllPowerUps();
+                rocketMode = true;
+                playerCollider.enabled = false;
+                rb.gravityScale = 0;
+                playerLt.enabled = true;
+                powerUpStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
+                powerUpDuration = powerup.duration;
+            }
+
 
         }
 
-        //if (col.gameObject.name.Contains("cactus"))
-        //{
-        //    col.gameObject.GetComponent<Animator>().SetBool("CactusGotHit", true); 
-        //}
-
-        //if (col.gameObject.name.Contains("spikes"))
-        //{
-        //    col.gameObject.GetComponent<Animator>().SetBool("SpikeGotHit", true); 
-        //}
 
         if (col.gameObject.CompareTag("Obstacle"))
 
@@ -505,6 +534,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (!gotKilled)
                 {
+                    DisableAllPowerUps();
                     GameControl.control.AddScore(playerScore);
                     GameControl.control.GetLastScore(playerScore);
                     GameControl.control.GetTop5Scores();
@@ -513,6 +543,7 @@ public class PlayerMovement : MonoBehaviour
                 }
 
                 gotKilled = true;
+
             }
         }
         else if (col.collider.gameObject.name.Contains("tall floating") && crashThroughEverything == false)
@@ -523,6 +554,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (!gotKilled)
                 {
+                    DisableAllPowerUps();
                     GameControl.control.AddScore(playerScore);
                     GameControl.control.GetLastScore(playerScore);
                     GameControl.control.GetTop5Scores();
@@ -566,7 +598,9 @@ public class PlayerMovement : MonoBehaviour
         freeze = false;
         atePoop = false;
         rolling = false;
+        rocketMode = false;
         playerLt.enabled = false;
+
 
     }
 

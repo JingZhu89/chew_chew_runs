@@ -35,7 +35,7 @@ public class ScoreAndHighScoreDisplay : MonoBehaviour
             scoreAnimationText.text = Player.pointsJustEarnedNew.ToString();
         }
 
-        if (Player.freeze == true || Player.crashThroughEverything == true || Player.flyingMode == true)
+        if (Player.freeze == true || Player.crashThroughEverything == true || Player.flyingMode == true || Player.rocketMode==true)
         {
             powerUpText.color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         }

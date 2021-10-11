@@ -11,6 +11,7 @@ TagManager:
   - FlyingMode
   - Freeze
   - CollisionDetection
+  - Rocket
   layers:
   - Default
   - TransparentFX
