@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class GetObstacle : MonoBehaviour
+public class GetFloatingObstacle : MonoBehaviour
 {
-
-    public static GetObstacle SharedInstance;
+    public static GetFloatingObstacle SharedInstance;
     public List<ObstacleProbability> obstacles;
 
     private void Awake()
@@ -15,7 +14,7 @@ public class GetObstacle : MonoBehaviour
 
     }
 
-    public GameObject getObstacle()
+    public GameObject getFloatingObstacle()
     {
         int runningTotal = 0;
         int sum = obstacles.Select(p => p.probability).Sum();
@@ -31,8 +30,5 @@ public class GetObstacle : MonoBehaviour
         }
         return null;
     }
-
-
-
 
 }

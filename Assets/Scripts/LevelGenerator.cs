@@ -22,10 +22,12 @@ public class LevelGenerator : MonoBehaviour
     public int maxContinuouseGround = 20;
     public int minDistanceBetweenManholes = 2;
     private bool manholeJustSpawned = false;
-    public float obstacleSpawnPercentage = 0.10f;
+    public float groundObstacleSpawnPercentage = 0.10f;
+    public float floatingObstacleSpawnPercentage = 0.10f;
     public float collectableSpawnPercentage = 0.15f;
     public float powerUpSpawnPercentage = 0.08f;
-    private bool obstacleJustSpawned = false;
+    private bool groundObstacleJustSpawned = false;
+    private bool floatingObstacleJustSpawned = false;
     public float distanceToGround_1 = -1.0f;
     public float distanceToGround_2 = 2.8f;
     public float floatingDistance1Vs2Ratio = 0.5f;
@@ -98,7 +100,7 @@ public class LevelGenerator : MonoBehaviour
 
 
         
-        if ((Random.Range(0.0f, 1.0f)< manholePercentage || numberOfGroundSpawned>maxContinuouseGround) && obstacleJustSpawned == false && numberOfGroundSpawned > minDistanceBetweenManholes)
+        if ((Random.Range(0.0f, 1.0f)< manholePercentage || numberOfGroundSpawned>maxContinuouseGround) && groundObstacleJustSpawned == false && numberOfGroundSpawned > minDistanceBetweenManholes)
         {
              lastGroundPartTransform = SpawnManhole(groundEndPosition);
              manholeJustSpawned = true;
@@ -120,19 +122,19 @@ public class LevelGenerator : MonoBehaviour
 
             //spawn obstable and collectable on ground parts//
 
-            if (obstacleJustSpawned == false && obstaclesSpawnRNG < obstacleSpawnPercentage && manholeJustSpawned == false && hitleft.collider==null && hitright.collider==null && hitmiddle.collider==null)
+            if (groundObstacleJustSpawned == false && obstaclesSpawnRNG < groundObstacleSpawnPercentage && manholeJustSpawned == false && hitleft.collider==null && hitright.collider==null && hitmiddle.collider==null)
             {
-                Transform obstacleTransform= SpawnObstacle(lastGroundPartTransform.Find("up").position);
+                Transform obstacleTransform= SpawnGroundObstacle(lastGroundPartTransform.Find("up").position);
                 var obstacleDownPosition = obstacleTransform.Find("down").localPosition;
                 obstacleTransform.position -= Vector3.Scale(obstacleDownPosition, obstacleTransform.localScale);        
-                obstacleJustSpawned = true;
+                groundObstacleJustSpawned = true;
                 numberOfNoObstacleSpawned = 0;
             }
 
             else
             {
                 numberOfNoObstacleSpawned++;
-                obstacleJustSpawned = false;
+                groundObstacleJustSpawned = false;
                 if (collectableSpawnRNG < collectableSpawnPercentage)
                 {
                     Transform collectableTrasnform = SpawnCollectable(lastGroundPartTransform.Find("up").position);
@@ -223,7 +225,15 @@ public class LevelGenerator : MonoBehaviour
                 for (int i = 0; i < numberOfMiddlePlatforms; i++)
                 {
                     lastFloatingPartTransform = SpawnFloatingPlatformMiddle(floatingEndPosition);
-                    SpawnObjectsOnPlatform(lastFloatingPartTransform);
+                    if (i % 2 == 0)
+                    {
+                        SpawnObjectsOnPlatform(lastFloatingPartTransform);
+                    }
+                    else
+                    {
+                        SpawnFloatingObstacleOnPlatform(lastFloatingPartTransform);
+                    }
+
                     floatingEndPosition = GetFloatingMiddlePosition(lastFloatingPartTransform);
                 }
                 lastFloatingPartTransform = SpawnFloatingPlatformRight(floatingEndPosition);
@@ -239,7 +249,14 @@ public class LevelGenerator : MonoBehaviour
                 for (int i = 0; i < numberOfMiddlePlatforms; i++)
                 {
                     lastFloatingPartTransform = SpawnFloatingTallPlatformMiddle(floatingEndPosition);
-                    SpawnObjectsOnPlatform(lastFloatingPartTransform);
+                    if (i % 2 == 0)
+                    {
+                        SpawnObjectsOnPlatform(lastFloatingPartTransform);
+                    }
+                    else
+                    {
+                        SpawnFloatingObstacleOnPlatform(lastFloatingPartTransform);
+                    }
                     floatingEndPosition = GetFloatingMiddlePosition(lastFloatingPartTransform);
                 }
                 lastFloatingPartTransform = SpawnFloatingTallPlatformRight(floatingEndPosition);
@@ -291,7 +308,6 @@ public class LevelGenerator : MonoBehaviour
     private void SpawnObjectsOnPlatform(Transform lastFloatingPartTransform)
     {
 
-        float obstaclesSpawnRNG = Random.Range(0.0f, 1.0f);
         float collectableSpawnRNG = Random.Range(0.0f, 1.0f);
         float powerUpSpawnRNG = Random.Range(0.0f, 1.0f);
 
@@ -307,6 +323,19 @@ public class LevelGenerator : MonoBehaviour
             Transform powerUpTransform = SpawnPowerUps(lastFloatingPartTransform.Find("up").position);
             var powerUpDownPosition = powerUpTransform.Find("down").localPosition;
             powerUpTransform.position -= Vector3.Scale(powerUpDownPosition, powerUpTransform.localScale);
+        }
+
+    }
+
+
+    private void SpawnFloatingObstacleOnPlatform(Transform lastFloatingPartTransform)
+    {
+        float floatingObstacleSpawnRNG = Random.Range(0.0f, 1.0f);
+        if (floatingObstacleSpawnRNG < floatingObstacleSpawnPercentage)
+        {
+            Transform floatingObstacleTrasnform = SpawnFloatingObstacle(lastFloatingPartTransform.Find("up").position);
+            var floatingObstacleDownPosition = floatingObstacleTrasnform.Find("down").localPosition;
+            floatingObstacleTrasnform.position -= Vector3.Scale(floatingObstacleDownPosition, floatingObstacleTrasnform.localScale);
         }
 
     }
@@ -508,14 +537,21 @@ public class LevelGenerator : MonoBehaviour
     }
 
 
-    private Transform SpawnObstacle(Vector3 spawnPosition)
+    private Transform SpawnGroundObstacle(Vector3 spawnPosition)
     {
-        Transform ObstacleTransform;
-        var obstacle = GetObstacle.SharedInstance.getObstacle();
-        ObstacleTransform = Instantiate(obstacle, spawnPosition, Quaternion.identity).transform;
-        return ObstacleTransform;
+        Transform GroundObstacleTransform;
+        var groundObstacle = GetGroundObstacle.SharedInstance.getGroundObstacle();
+        GroundObstacleTransform = Instantiate(groundObstacle, spawnPosition, Quaternion.identity).transform;
+        return GroundObstacleTransform;
     }
 
+    private Transform SpawnFloatingObstacle(Vector3 spawnPosition)
+    {
+        Transform FloatingObstacleTransform;
+        var floatingObstacle = GetFloatingObstacle.SharedInstance.getFloatingObstacle();
+        FloatingObstacleTransform = Instantiate(floatingObstacle, spawnPosition, Quaternion.identity).transform;
+        return FloatingObstacleTransform;
+    }
 
 
 

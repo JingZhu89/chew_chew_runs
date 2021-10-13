@@ -12,6 +12,7 @@ TagManager:
   - Freeze
   - CollisionDetection
   - Rocket
+  - Puddle
   layers:
   - Default
   - TransparentFX

@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
     public int rollingDuration;
     public int atePoopRemainingTime { get; private set; }
     private int atePoopStartTime;
-    public int atePoopDuration;
+    public float atePoopDuration;
 
     Animator animator;
     public float playerAnimatorSpeedMultiplier;
@@ -59,6 +59,8 @@ public class PlayerMovement : MonoBehaviour
     public float rollingSpeedmultiplier;
     private Light2D playerLt;
     private Collider2D playerCollider;
+    private float startXPosition;
+    public bool ateSth;
 
     private void Awake()
     {
@@ -83,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
         playerLt.enabled = false;
         DisableAllPowerUps();
         FindObjectOfType<AudioManager>().PlaySound("LevelThemeSound");
+        startXPosition = transform.position.x;
 
 
     }
@@ -127,6 +130,8 @@ public class PlayerMovement : MonoBehaviour
             gotKilled = true;
 
         }
+
+        playerScore = Mathf.RoundToInt((transform.position.x - startXPosition) * playerScoreMultiplier);
 
     }
 
@@ -182,6 +187,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         currentSpeed = velocity.x;
+        
         animator.speed = currentSpeed * playerAnimatorSpeedMultiplier;
 
 
@@ -439,13 +445,12 @@ public class PlayerMovement : MonoBehaviour
             if (col.gameObject.CompareTag("Collectable"))
             {
                 Destroy(col.gameObject);
-
+                ateSth = true;
                 pointsJustEarnedNew = collectable.points;
                 playerScore=Mathf.Max(playerScore+collectable.points,0);
                 if (col.gameObject.name.Contains("poop"))
                 {
                     FindObjectOfType<AudioManager>().PlaySound("ChuChuEatPoopSound");
-                    DisableAllPowerUps();
                     atePoop = true;
                     atePoopStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
                 }
@@ -462,7 +467,7 @@ public class PlayerMovement : MonoBehaviour
             Light2D powerupLt = col.gameObject.GetComponentInChildren<Light2D>();
             FindObjectOfType<AudioManager>().PlaySound("ChuChuPowerUpSound");
 
-            playerLt.color = powerupLt.color;
+            //playerLt.color = powerupLt.color;
 
             if (col.gameObject.CompareTag("CrashThrough"))
             {
@@ -510,13 +515,31 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (col.gameObject.CompareTag("Obstacle"))
+        if (col.gameObject.CompareTag("Puddle"))
 
         {
             DisableAllPowerUps();
             rolling = true;
             rollingStartTime = Mathf.RoundToInt(Time.timeSinceLevelLoad);
 
+        }
+
+
+
+        if (col.gameObject.CompareTag("Obstacle"))
+
+        {
+            if (!gotKilled)
+            {
+                DisableAllPowerUps();
+                GameControl.control.AddScore(playerScore);
+                GameControl.control.GetLastScore(playerScore);
+                GameControl.control.GetTop5Scores();
+                GameControl.control.TopScore();
+                GameOver.SharedInstance.EndGame();
+            }
+
+            gotKilled = true;
         }
 
     }

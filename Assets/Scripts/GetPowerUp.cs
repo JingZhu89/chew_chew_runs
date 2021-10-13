@@ -17,7 +17,7 @@ public class GetPowerUp : MonoBehaviour
     public PowerUp getPowerUp()
     {
         // TODO - change this based on player speed
-        bool playerIsReallyFast = PlayerMovement.SharedInstance.currentSpeed >= 15;
+        bool playerIsReallyFast = PlayerMovement.SharedInstance.currentSpeed >= PlayerMovement.SharedInstance.speedThreshold1;
 
 
         List<PowerUpProbabilityAndDuration> filteredPowerups;

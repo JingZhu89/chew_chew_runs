@@ -160,8 +160,8 @@ MonoBehaviour:
     probability: 1
     onlySpawnWhenPlayerIsFast: 0
   - powerUpObject: {fileID: -8465488617302086703, guid: 6fdf1d1ada790584792a32ad34f0da43, type: 3}
-    probability: 10
-    onlySpawnWhenPlayerIsFast: 0
+    probability: 1
+    onlySpawnWhenPlayerIsFast: 1
   - powerUpObject: {fileID: -7736772461528384523, guid: 82168b9f31ba8e340a9443c9bdf2d4ce, type: 3}
     probability: 1
     onlySpawnWhenPlayerIsFast: 1
@@ -278,7 +278,7 @@ MonoBehaviour:
   - collectableObject: {fileID: 3433744948286911320, guid: fd38e76375ca17440984626f1e50b875, type: 3}
     probability: 1
   - collectableObject: {fileID: 6480349890970998448, guid: 8915c8f29bbbf814fb8c9c975677c911, type: 3}
-    probability: 5
+    probability: 1
   - collectableObject: {fileID: 3202551315815494180, guid: 8c8f6b80a318e7645a5a58b653049baf, type: 3}
     probability: 1
 --- !u!4 &374988649
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 568795309}
   - component: {fileID: 568795308}
   m_Layer: 0
-  m_Name: ObstacleProbs
+  m_Name: GroundObstacleProbs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1341,7 +1341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac96e3731661bd149906161151594400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seasonLength: 2
+  seasonLength: 10
 --- !u!4 &1760331331
 Transform:
   m_ObjectHideFlags: 0
@@ -1402,17 +1402,18 @@ MonoBehaviour:
   maxDistanceBetweenForegrounds: 30
   maxContinuouseGround: 10
   minDistanceBetweenManholes: 2
-  obstacleSpawnPercentage: 0.1
+  groundObstacleSpawnPercentage: 0.1
+  floatingObstacleSpawnPercentage: 1
   collectableSpawnPercentage: 0.15
   powerUpSpawnPercentage: 0.05
   distanceToGround_1: 0
-  distanceToGround_2: 2.5
+  distanceToGround_2: 2
   floatingDistance1Vs2Ratio: 0.5
   maxContinuousPlatform: 4
   minDistanceBetweenPlatformSets: 5
   maxDistanceBetweenPlatformSets: 10
   minDistanceBetweenObstacles: 4
-  floatingTallVsFlatRatio: 0.5
+  floatingTallVsFlatRatio: 0.7
 --- !u!4 &1813355451
 Transform:
   m_ObjectHideFlags: 0
@@ -1609,6 +1610,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cbbd04e78bfe42498981b31f2c434ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2060669908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2060669909}
+  - component: {fileID: 2060669910}
+  m_Layer: 0
+  m_Name: FloatingObstacleProbs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2060669909
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060669908}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.7277868, y: 0.19499283, z: -85.02812}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 22
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2060669910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060669908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7c7b50acdf219e4aa8516b67f76285f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacles:
+  - obstacleObject: {fileID: 2393051536729826429, guid: 5e23b0b08f70a6946bc46d3f1bd04d44, type: 3}
+    probability: 1
 --- !u!1 &2119777803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1913,6 +1960,66 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: a82f1866a44c11d42a7ef25191b2c27a, type: 3}
+    - target: {fileID: 5279338361616208676, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 7.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5279338361616208676, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 7.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5279338361616208676, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 9.212467
+      objectReference: {fileID: 0}
+    - target: {fileID: 5279338361616208676, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5279338361616208676, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000979289551243594, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 7.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000979289551243594, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 7.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000979289551243594, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 8.913362
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000979289551243594, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000979289551243594, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8332590163217786530, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 8.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 8332590163217786530, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 8.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 8332590163217786530, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10.002108
+      objectReference: {fileID: 0}
+    - target: {fileID: 8332590163217786530, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8332590163217786530, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81280f02d897e37409929ecb51663d1f, type: 3}
 --- !u!212 &565907483127144581 stripped
@@ -2308,7 +2415,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
       propertyPath: atePoopDuration
-      value: 5
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
       propertyPath: rollingDuration
@@ -2319,8 +2426,16 @@ PrefabInstance:
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
+      propertyPath: speedIncreaseFactor
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
       propertyPath: freezeSpeedmultiplier
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
+      propertyPath: playerScoreMultiplier
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
       propertyPath: rollingSpeedmultiplier
@@ -2328,7 +2443,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
       propertyPath: playerAnimatorSpeedMultiplier
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6673224115942202462, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
       propertyPath: m_RootOrder

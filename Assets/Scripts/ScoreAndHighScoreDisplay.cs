@@ -11,7 +11,7 @@ public class ScoreAndHighScoreDisplay : MonoBehaviour
     public Text powerUpText;
     public Text topScoreText;
     public Text scoreAnimationText;
-    private int playerScoreOld = 0;
+    //private int playerScoreOld = 0;
     Animator scoreAnimator;
         
     private void Start()
@@ -43,11 +43,10 @@ public class ScoreAndHighScoreDisplay : MonoBehaviour
         {
             powerUpText.color = new Vector4(1.0f, 1.0f, 1.0f, 0.0f);
         }
-        if(playerScoreOld != Player.playerScore)
+        if(Player.ateSth==true)
         {
             scoreAnimator.SetTrigger("NewScoreAdded");
-            playerScoreOld = Player.playerScore;
-
+            Player.ateSth = false;
         }
         else
         {
