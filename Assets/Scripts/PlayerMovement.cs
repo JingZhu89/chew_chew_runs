@@ -187,7 +187,9 @@ public class PlayerMovement : MonoBehaviour
 
 
         currentSpeed = velocity.x;
-        
+
+        print("isgrounded =" + isGrounded);
+
         animator.speed = currentSpeed * playerAnimatorSpeedMultiplier;
 
 
@@ -386,22 +388,22 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if(atePoop==true && squeeze==false && isGrounded==true && gotKilled == false)
+        if(atePoop==true && squeeze==false && isGrounded==true && gotKilled == false && rolling==false && crashThroughEverything==false && flyingMode==false && rocketMode==false)
         {
             ChangePlayerAnimationState("chuchu run hurt");
         }
 
-        if (atePoop == true && jumpingUp == true && gotKilled == false)
+        if (atePoop == true && jumpingUp == true && gotKilled == false && rolling == false && crashThroughEverything == false && flyingMode == false && rocketMode == false)
         {
             ChangePlayerAnimationState("chuchu jumpup hurt");
         }
         
-        if (atePoop == true && jumpingDown == true && gotKilled == false)
+        if (atePoop == true && jumpingDown == true && gotKilled == false && rolling == false && crashThroughEverything == false && flyingMode == false && rocketMode == false)
         {
             ChangePlayerAnimationState("chuchu jumpdown hurt");
         }
 
-        if (atePoop == true && squeeze == true && isGrounded==true && gotKilled == false)
+        if (atePoop == true && squeeze == true && isGrounded==true && gotKilled == false && rolling == false && crashThroughEverything == false && flyingMode == false && rocketMode == false)
         {
             ChangePlayerAnimationState("chuchu squeeze hurt");
         }
