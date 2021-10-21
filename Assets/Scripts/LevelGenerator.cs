@@ -27,7 +27,7 @@ public class LevelGenerator : MonoBehaviour
     public float collectableSpawnPercentage = 0.15f;
     public float powerUpSpawnPercentage = 0.08f;
     private bool groundObstacleJustSpawned = false;
-    private bool floatingObstacleJustSpawned = false;
+
     public float distanceToGround_1 = -1.0f;
     public float distanceToGround_2 = 2.8f;
     public float floatingDistance1Vs2Ratio = 0.5f;
@@ -116,9 +116,9 @@ public class LevelGenerator : MonoBehaviour
             RaycastHit2D hitmiddle = Physics2D.Raycast(lastGroundPartTransform.Find("up").position, Vector2.up, castDistance, mask);
             manholeJustSpawned = false;
 
+            print("ground up position is "+lastGroundPartTransform.Find("up").position);
 
-            numberOfGroundSpawned++; 
-
+            numberOfGroundSpawned++;
 
             //spawn obstable and collectable on ground parts//
 
@@ -169,6 +169,7 @@ public class LevelGenerator : MonoBehaviour
         Transform lastGroundPartTransform = SpawnGround(groundEndPosition);
 
         groundEndPosition = lastGroundPartTransform.Find("right").position + (lastGroundPartTransform.Find("right").position - lastGroundPartTransform.Find("left").position) / 2;
+        print("beginning ground up position is " + lastGroundPartTransform.Find("up").position);
     }
 
 

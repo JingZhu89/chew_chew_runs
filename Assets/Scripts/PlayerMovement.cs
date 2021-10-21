@@ -61,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
     private Collider2D playerCollider;
     private float startXPosition;
     public bool ateSth;
+    private float playerXposition;
 
     private void Awake()
     {
@@ -229,7 +230,17 @@ public class PlayerMovement : MonoBehaviour
 
         rb.velocity = velocity;
 
- 
+        
+        //force movement when stuck//
+
+        if (transform.position.x == playerXposition && crashThroughEverything==false)
+        {
+            transform.position = transform.position + new Vector3(currentSpeed*Time.deltaTime, 0, 0);
+        }
+        playerXposition = transform.position.x;
+
+
+
 
         if (crashThroughEverything == true)
         {

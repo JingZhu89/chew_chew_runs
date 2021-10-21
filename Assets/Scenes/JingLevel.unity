@@ -1397,10 +1397,10 @@ MonoBehaviour:
   groundManhole_1: {fileID: 8526997330594229747, guid: b60a62e9b4b55054b999788f4aab6f0a, type: 3}
   player: {fileID: 564574327}
   startingLevelParts: 8
-  manholePercentage: 0.15
+  manholePercentage: 0
   minDistanceBetweenForegrounds: 20
   maxDistanceBetweenForegrounds: 30
-  maxContinuouseGround: 10
+  maxContinuouseGround: 400
   minDistanceBetweenManholes: 2
   groundObstacleSpawnPercentage: 0.1
   floatingObstacleSpawnPercentage: 1
@@ -1410,8 +1410,8 @@ MonoBehaviour:
   distanceToGround_2: 2
   floatingDistance1Vs2Ratio: 0.5
   maxContinuousPlatform: 4
-  minDistanceBetweenPlatformSets: 5
-  maxDistanceBetweenPlatformSets: 10
+  minDistanceBetweenPlatformSets: 300
+  maxDistanceBetweenPlatformSets: 500
   minDistanceBetweenObstacles: 4
   floatingTallVsFlatRatio: 0.7
 --- !u!4 &1813355451
