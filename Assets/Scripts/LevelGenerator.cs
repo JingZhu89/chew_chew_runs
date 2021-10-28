@@ -175,7 +175,7 @@ public class LevelGenerator : MonoBehaviour
 
     private void SpawnForeground()
     {
-        Transform lastForegroundTransform;
+        Transform lastForegroundTransform;      
         float xdistanceBetweenForeground = Random.Range(minDistanceBetweenForegrounds, maxDistanceBetweenForegrounds);
         lastForegroundTransform = SpawnForeground(foregroundEndPosition);
         foregroundEndPosition = new Vector3(lastForegroundTransform.Find("right").position.x + xdistanceBetweenForeground,lastForegroundTransform.Find("right").position.y,0);

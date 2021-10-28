@@ -62,6 +62,9 @@ public class PlayerMovement : MonoBehaviour
     private float startXPosition;
     public bool ateSth;
     private float playerXposition;
+    public PlayerButton JumpButton;
+    public PlayerButton SqueezeButton;
+
 
     private void Awake()
     {
@@ -95,24 +98,24 @@ public class PlayerMovement : MonoBehaviour
     {
 
         //jump input and condition
-        if (Input.GetButtonDown("Jump") && rocketMode==false)
+        if ((Input.GetButtonDown("Jump")||JumpButton.IsPressed==true) && rocketMode==false)
         {
             jump = true;
             FindObjectOfType<AudioManager>().PlaySound("ChuChuJumpSound");
         }
 
-        if (Input.GetButtonUp("Jump") && rocketMode==false)
+        if ((Input.GetButtonUp("Jump")||JumpButton.IsPressed==false) && rocketMode==false)
         {
             jumping = false;
         }
 
         //squeeze input and condition
 
-        if (Input.GetButtonDown("Down") && rocketMode==false)
+        if ((Input.GetButtonDown("Down")||SqueezeButton.IsPressed==true) && rocketMode==false)
         {
             squeeze = true;
         }
-        if (Input.GetButtonUp("Down") && rocketMode==false)
+        if ((Input.GetButtonUp("Down")||SqueezeButton.IsPressed==false) && rocketMode==false)
         {
             squeeze = false;
         }
@@ -305,7 +308,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (rolling == true)
         {
-            FindObjectOfType<AudioManager>().PlaySound("ChuChuRollSound");
+            FindObjectOfType<AudioManager>().PlaySound("ChuChuRollSound");print("rollsound played");
             rollingRemainingTime = Mathf.Max(rollingDuration - (Mathf.RoundToInt(Time.timeSinceLevelLoad) - rollingStartTime), 0);
             if (rollingRemainingTime == 0)
                 rolling = false;

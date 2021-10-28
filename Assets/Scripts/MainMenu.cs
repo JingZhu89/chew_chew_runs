@@ -50,7 +50,6 @@ public class MainMenu : MonoBehaviour
         transition.SetTrigger("Start");
         yield return new WaitForSecondsRealtime(transitionTime);
         SceneManager.LoadScene(levelIndex);
-
     }
 
     public void QuitGame()
