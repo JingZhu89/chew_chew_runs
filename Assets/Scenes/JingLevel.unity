@@ -157,13 +157,13 @@ MonoBehaviour:
     probability: 1
     onlySpawnWhenPlayerIsFast: 0
   - powerUpObject: {fileID: 6802699636330785184, guid: ff1c7b0bd7245cf47ba74013ba3a78fd, type: 3}
-    probability: 1
+    probability: 0
     onlySpawnWhenPlayerIsFast: 0
   - powerUpObject: {fileID: -8465488617302086703, guid: 6fdf1d1ada790584792a32ad34f0da43, type: 3}
-    probability: 1
+    probability: 0
     onlySpawnWhenPlayerIsFast: 1
   - powerUpObject: {fileID: -7736772461528384523, guid: 82168b9f31ba8e340a9443c9bdf2d4ce, type: 3}
-    probability: 1
+    probability: 0
     onlySpawnWhenPlayerIsFast: 1
 --- !u!4 &110628505
 Transform:
@@ -347,7 +347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacles:
   - obstacleObject: {fileID: 1631224437361818079, guid: b9c25b5593a1a344fb35ebfe5b5ec126, type: 3}
-    probability: 1
+    probability: 0
 --- !u!4 &568795309
 Transform:
   m_ObjectHideFlags: 0
@@ -1663,10 +1663,10 @@ MonoBehaviour:
   groundManhole_1: {fileID: 8526997330594229747, guid: b60a62e9b4b55054b999788f4aab6f0a, type: 3}
   player: {fileID: 564574327}
   startingLevelParts: 8
-  manholePercentage: 0.08
+  manholePercentage: 0
   minDistanceBetweenForegrounds: 20
   maxDistanceBetweenForegrounds: 40
-  maxContinuouseGround: 30
+  maxContinuouseGround: 10000
   minDistanceBetweenManholes: 2
   groundObstacleSpawnPercentage: 0.1
   floatingObstacleSpawnPercentage: 1
@@ -2612,6 +2612,10 @@ PrefabInstance:
       propertyPath: atePoopDuration
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 6673224115942202461, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
+      propertyPath: startingGroundTile
+      value: 
+      objectReference: {fileID: 1375622182}
     - target: {fileID: 6673224115942202462, guid: dc058c5a5abc9004bae85d5ba33cfc18, type: 3}
       propertyPath: m_RootOrder
       value: 7

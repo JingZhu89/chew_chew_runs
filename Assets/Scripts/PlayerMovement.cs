@@ -48,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
     public int atePoopRemainingTime { get; private set; }
     private int atePoopStartTime;
     public float atePoopDuration;
+    [SerializeField] private Transform startingGroundTile;
 
     Animator animator;
     public float playerAnimatorSpeedMultiplier;
@@ -64,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
     private float playerXposition;
     public PlayerButton JumpButton;
     public PlayerButton SqueezeButton;
-
+    private bool collidingWithTallPlatform;
 
     private void Awake()
     {
@@ -101,7 +102,6 @@ public class PlayerMovement : MonoBehaviour
         if ((Input.GetButtonDown("Jump")||JumpButton.IsPressed==true) && rocketMode==false)
         {
             jump = true;
-            FindObjectOfType<AudioManager>().PlaySound("ChuChuJumpSound");
         }
 
         if ((Input.GetButtonUp("Jump")||JumpButton.IsPressed==false) && rocketMode==false)
@@ -200,6 +200,7 @@ public class PlayerMovement : MonoBehaviour
         //y velocity calculation//
         if (jump == true && isGrounded == true && flyingMode == false)
         {
+            FindObjectOfType<AudioManager>().PlaySound("ChuChuJumpSound");
             velocity.y = jumpVelocity;
             jumpTimeCounter = jumpTime;
             jumping = true;
@@ -233,10 +234,10 @@ public class PlayerMovement : MonoBehaviour
 
         rb.velocity = velocity;
 
-        
+
         //force movement when stuck//
 
-        if (transform.position.x == playerXposition && crashThroughEverything==false)
+        if (transform.position.x == playerXposition && (crashThroughEverything == false ||(crashThroughEverything==true && collidingWithTallPlatform==false))&& transform.Find("down").position.y < startingGroundTile.Find("up").position.y+0.8)
         {
             transform.position = transform.position + new Vector3(currentSpeed*Time.deltaTime, 0, 0);
         }
@@ -604,6 +605,12 @@ public class PlayerMovement : MonoBehaviour
                 gotKilled = true;
             }
 
+        else if (col.collider.gameObject.name.Contains("tall floating") && crashThroughEverything == true)
+            {
+                collidingWithTallPlatform = true;
+            }
+
+
         }
     }
 
@@ -626,7 +633,10 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrounded = false;
         }
-
+        if (col.collider.gameObject.CompareTag("tall floating"))
+        {
+            collidingWithTallPlatform = false;
+        }
     }
 
     private void DisableAllPowerUps()
